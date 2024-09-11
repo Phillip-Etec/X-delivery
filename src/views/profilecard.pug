@@ -1,0 +1,142 @@
+script.
+  function deleteUser() {
+    const xhr = new XMLHttpRequest();
+    const currentURL = window.location.href;
+    xhr.open("DELETE", currentURL + '/delete');
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    const body = JSON.stringify({
+      sure: true,
+    });
+    xhr.onload = () => {
+      if (xhr.readyState == 4 && xhr.status == 201) {
+        console.log(JSON.parse(xhr.responseText));
+      } else {
+        console.log(`Error: ${xhr.status}`);
+      }
+    };
+    xhr.send(body);
+  }
+  function updatePassword() {
+    const current_password = document.getElementById('currentPassword').value ;
+    const new_password = document.getElementById('newPassword').value;
+    const renew_password = document.getElementById('renewPassword').value;
+
+    if( new_password !== renew_password ) {
+      //TODO: add child alert node 
+      console.log('different passwords');
+    }
+    else if ( new_password === renew_password ) {
+      console.log( JSON.stringify({ title: "Hello World", body: "My POST request", userId: 900, }) );
+      const currentURL = window.location.href;
+      fetch(currentURL + '/password', {
+        method: "POST",
+        body: JSON.stringify({
+          password: current_password,
+          newPassword: new_password,
+          renewPassword: renew_password,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+      .then((response) => response.json())
+      .then((json) => console.log(json));
+    }
+  }
+if passwordError
+  .alert.alert-warning= passwordError
+if updateError
+  .alert.alert-warning= updateError
+.card.border-light.mb-3.bg-light
+  .card-body.pt-3
+    // Bordered Tabs
+    ul.nav.nav-tabs.nav-tabs-bordered
+      li.nav-item
+        button.nav-link.active(data-bs-toggle='tab', data-bs-target='#profile-overview') Dados
+      li.nav-item
+        button.nav-link(data-bs-toggle='tab', data-bs-target='#profile-edit') Editar Perfil
+      li.nav-item
+        button.nav-link(data-bs-toggle='tab', data-bs-target='#profile-change-password') Mudar Senha
+      li.nav-item
+        button.nav-link(data-bs-toggle='tab', data-bs-target='#profile-delete-account') Deletar Conta
+    .tab-content.pt-2
+      #profile-overview.tab-pane.fade.show.active.profile-overview
+        h5.card-title Detalhes do Perfil
+        .row
+          .col-lg-3.col-md-4.label Nome
+          .col-lg-9.col-md-8 #{name}
+        .row
+          .col-lg-3.col-md-4.label e-mail
+          .col-lg-9.col-md-8 #{email}
+        .row
+          .col-lg-3.col-md-4.label CPF
+          .col-lg-9.col-md-8 #{rnp}
+        .row
+          .col-lg-3.col-md-4.label Data de Nascimento
+          .col-lg-9.col-md-8 #{birthday}
+        .row
+          .col-lg-3.col-md-4.label Gênero
+          .col-lg-9.col-md-8 #{gender}
+        //-.row
+          //-.col-lg-3.col-md-4.label Phone
+          //-.col-lg-9.col-md-8 (436) 486-3538 x29071
+        //-.row
+          //-.col-lg-3.col-md-4.label Email
+          //-.col-lg-9.col-md-8 k.anderson@example.com
+      #profile-edit.tab-pane.fade.profile-edit.pt-3
+        // Profile Edit Form
+        form(method='post' action='?')
+          .row.mb-3
+            label.col-md-4.col-lg-3.col-form-label(for='name') Nome
+            .col-md-8.col-lg-9
+              input#name.form-control(name='name', type='text', value= name)
+          .row.mb-3
+            label.col-md-4.col-lg-3.col-form-label(for='email') e-mail
+            .col-md-8.col-lg-9
+              input#email.form-control(name='email', type='text', value= email)
+          .row.mb-3
+            label.col-md-4.col-lg-3.col-form-label(for='rnp') CPF
+            .col-md-8.col-lg-9
+              input#rnp.form-control(name='rnp', type='text', value= rnp)
+          .row.mb-3
+            label.col-md-4.col-lg-3.col-form-label(for='birthday') Data de Nascimento
+            .col-md-8.col-lg-9
+              input#birthday.form-control(name='birthday', type='text', value= birthday)
+          .row.mb-3
+            label.col-md-4.col-lg-3.col-form-label(for='gender') Gênero
+            .col-md-8.col-lg-9
+              select#gender.form-control(name='gender')
+                option prefiro não informar
+                option não-binário
+                option feminino
+                option masculino
+          .text-center
+            button.btn.btn-primary(type='submit') Salvar Mudanças
+        // End Profile Edit Form
+      #profile-change-password.tab-pane.fade.pt-3
+        // Change Password Form
+        form(method='' action='')
+          .row.mb-3
+            label.col-md-4.col-lg-3.col-form-label(for='currentPassword') Senha atual
+            .col-md-8.col-lg-9
+              input#currentPassword.form-control(name='password', type='password')
+          .row.mb-3
+            label.col-md-4.col-lg-3.col-form-label(for='newPassword') Senha nova
+            .col-md-8.col-lg-9
+              input#newPassword.form-control(name='newpassword', type='password')
+          .row.mb-3
+            label.col-md-4.col-lg-3.col-form-label(for='renewPassword') Reescreva a nova senha
+            .col-md-8.col-lg-9
+              input#renewPassword.form-control(name='renewpassword', type='password')
+          .text-center
+            button.btn.btn-primary(onclick="updatePassword()" type="button") Mudar Senha
+      #profile-delete-account.tab-pane.fade.pt-3
+          .card.text-white.bg-warning.mb-3
+            .card-body
+              h5.card-header Deseja mesmo deletar a sua conta?
+              p.card-text
+                | não será possível recuperar nenhum dado sobre a sua conta
+              form(method='' action='')
+                .text-center
+                  button.btn.btn-danger.card-link(onclick="deleteUser()" type="button") Deletar conta
+                  //-a.card-link(href='#') Another link

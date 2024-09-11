@@ -1,0 +1,182 @@
+script.
+  function limpa_formulário_cep() {
+    //Limpa valores do formulário de cep.
+    document.getElementById('street').value=("");
+    document.getElementById('county').value=("");
+    document.getElementById('city').value=("");
+    document.getElementById('state').value=("");
+    document.getElementById('county').value=("");
+    document.getElementById('region').value=("");
+  }
+
+  function preencher_formulario(conteudo) {
+    if (!("erro" in conteudo)) {
+      //Atualiza os campos com os valores.
+      document.getElementById('street').value=(conteudo.logradouro);
+      document.getElementById('county').value=(conteudo.bairro);
+      document.getElementById('city').value=(conteudo.localidade);
+      document.getElementById('state').value=(conteudo.uf);
+      document.getElementById('addon').value=(conteudo.complemento);
+      document.getElementById('region').value=(conteudo.regiao);
+    } //end if.
+    else {
+      //CEP não Encontrado.
+      limpa_formulário_cep();
+      alert("CEP não encontrado.");
+    }
+  }
+
+  function consultarViaCep(valor) {
+    //Nova variável "cep" somente com dígitos.
+    valor = valor.replaceAll('-', '');
+    var cep = valor.replace(/\D/g, '');
+
+    //Verifica se campo cep possui valor informado.
+    if (cep != "") {
+
+      //Expressão regular para validar o CEP.
+      var validacep = /^[0-9]{8}$/;
+
+      //Valida o formato do CEP.
+      if(validacep.test(cep)) {
+
+        //Preenche os campos com "..." enquanto consulta webservice.
+      document.getElementById('street').value=("...");
+      document.getElementById('county').value=("...");
+      document.getElementById('city').value=("...");
+      document.getElementById('state').value=("...");
+      document.getElementById('county').value=("...");
+      document.getElementById('region').value=("...");
+
+      //consultar com fetch
+        fetch('https://viacep.com.br/ws/' + cep + '/json', {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => response.json())
+        .then((json) => preencher_formulario(json));
+
+      } //end if.
+      else {
+        //cep é inválido.
+        limpa_formulário_cep();
+        alert("Formato de CEP inválido.");
+      }
+    } //end if.
+    else {
+      //cep sem valor, limpa formulário.
+      limpa_formulário_cep();
+    }
+  };
+  function addAddress() {
+    const type    = document.getElementById( 'type') .value;
+    const alias   = document.getElementById( 'alias')     .value;
+    const zip     = document.getElementById( 'zip')   .value;
+    const number  = document.getElementById( 'number') .value;
+    const addon   = document.getElementById( 'addon')     .value;
+    const street  = document.getElementById( 'street')   .value;
+    const city    = document.getElementById( 'city') .value;
+    const state   = document.getElementById( 'state')     .value;
+    const county  = document.getElementById( 'county')   .value;
+    const region  = document.getElementById( 'region')   .value;
+
+    console.log( JSON.stringify({ title: "Hello World", body: "My POST request", userId: 900, }) );
+    const currentURL = window.location.href;
+    fetch(currentURL + '/', {
+      method: "POST",
+      body: JSON.stringify({
+        type   : type   ,
+        alias  : alias  ,
+        zip    : zip    ,
+        number : number ,
+        addon  : addon  ,
+        street : street ,
+        city   : city   ,
+        state  : state  ,
+        county : county ,
+        region : region ,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+    .then((response) => response.json())
+    .then((json) => alert(json.message));
+  }
+.container
+  .row.justify-content-center
+    .col-md-8
+      if error
+        .alert.alert-warning= error
+      .card
+        .card-header Adicionar Endereço
+        .card-body
+          form.form-horizontal(method='' action='')
+            .form-group
+              label(for='type') Tipo de Endereço
+              select#type.form-control(name='type')
+                option Residencial
+                option Edifício comercial
+            .form-group
+              label.form-label.control-label(for='alias') Apelido
+              input#alias.form-control(type='text' name='alias')
+            .form-group
+              label.form-label.control-label(for='zip') CEP
+              input#zip.form-control(type='text' name='zip' onfocusout="consultarViaCep(this.value);")
+            .form-group
+              label.form-label.control-label(for='number') Número
+              input#number.form-control(type='text' name='number')
+            .form-group
+              label.form-label.control-label(for='addon') Complemento
+              input#addon.form-control(type='text' name='addon')
+            .form-group
+              label.form-label.control-label(for='street') Logradouro
+              input#street.form-control(type='text' name='street')
+            .form-group
+              label.form-label.control-label(for='city') Cidade
+              input#city.form-control(type='text' name='city')
+            .form-group
+              label(for='state') Estado
+              select#state.form-control(name='state')
+                option AC
+                option AL
+                option AP
+                option AM
+                option BA
+                option CE
+                option DF
+                option ES
+                option GO
+                option MA
+                option MT
+                option MS
+                option MG
+                option PA
+                option PB
+                option PR
+                option PE
+                option PI
+                option RJ
+                option RN
+                option RS
+                option RO
+                option RR
+                option SC
+                option SP
+                option SE 
+                option TO
+            .form-group
+              label.form-label.control-label(for='county') Bairro
+              input#county.form-control(type='text' name='county')
+            .form-group
+              label(for='region') Região
+              select#region.form-control(name='region')
+                option Norte
+                option Sul
+                option Sudeste
+                option Nordeste
+                option Centro-Oeste
+            .mb-3.py-3.justify-content-center
+              button.btn.btn-primary.login-button(onclick="addAddress();" type="button") Adicionar Endereço

@@ -1,0 +1,63 @@
+extends layout.pug
+
+block content
+  script.
+    function addCard() {
+      const name      = document.getElementById( 'name') .value;
+      const issuer    = document.getElementById( 'issuer')     .value;
+      const number    = document.getElementById( 'number')   .value;
+      const expiry    = document.getElementById( 'expiry') .value;
+      const cvv       = document.getElementById( 'cvv')     .value;
+      const modality  = document.getElementById( 'modality')   .value;
+
+      const currentURL = window.location.href;
+      fetch(currentURL + '', {
+        method: "POST",
+        body: JSON.stringify({
+          name     : name     ,
+          issuer   : issuer   ,
+          number   : number   ,
+          expiry   : expiry   ,
+          cvv      : cvv      ,
+          modality : modality ,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+      .then((response) => response.json())
+      .then((json) => alert(json.message));
+    }
+  .container
+    .row.justify-content-center
+      .col-md-8
+        if error
+          .alert.alert-warning= error
+        .card
+          .card-header Adicionar Cartão
+          .card-body
+            form.form-horizontal(method='' action='')
+              .form-group
+                label.form-label.control-label(for='name') Nome Impresso
+                input#name.form-control(type='text' name='name')
+              .form-group
+                label(for='issuer') Bandeira
+                select#issuer.form-control(name='issuer')
+                  option MasterCard
+                  option Visa
+              .form-group
+                label.form-label.control-label(for='number') Número
+                input#number.form-control(type='text' name='number')
+              .form-group
+                label.form-label.control-label(for='expiry') Data de Expiração
+                input#expiry.form-control(type='text' name='expiry')
+              .form-group
+                label.form-label.control-label(for='cvv') CVV
+                input#cvv.form-control(type='text' name='cvv')
+              .form-group
+                label(for='modality') Modalidade
+                select#modality.form-control(name='modality')
+                  option Crédito
+                  option Débito
+              .mb-3.py-3.justify-content-center
+                button.btn.btn-primary.login-button(onclick="addCard();" type="button") Adicionar Cartão

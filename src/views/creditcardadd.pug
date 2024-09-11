@@ -1,0 +1,153 @@
+extends layout.pug
+
+block content
+  .container
+    script.
+      function deleteCard(text) {
+        let number = text.replaceAll("Deletar Cartão de número ", ''); 
+        number = number.replaceAll("Deletar Cartão de número", ''); 
+        console.log(number);
+        const xhr = new XMLHttpRequest();
+        const currentURL = window.location.href;
+        xhr.open("DELETE", currentURL + '/delete');
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        const body = JSON.stringify({
+          number: number,
+        });
+        xhr.onload = () => {
+          if (xhr.readyState == 4 && xhr.status == 201) {
+            console.log(JSON.parse(xhr.responseText));
+          } else {
+            console.log(`Error: ${xhr.status}`);
+          }
+        };
+        xhr.send(body);
+      }
+
+      function editCard(text) {
+        console.log(text.replace('Salvar Mudanças do Cartão de numero', ''));
+        const current_number = document.getElementById('currentPassword').value ;
+        const new_password = document.getElementById('newPassword').value;
+        const renew_password = document.getElementById('renewPassword').value;
+
+        console.log( JSON.stringify({ title: "Hello World", body: "My POST request", userId: 900, }) );
+        const currentURL = window.location.href;
+        fetch(currentURL + '/password', {
+          method: "POST",
+          body: JSON.stringify({
+            password: current_password,
+            newPassword: new_password,
+            renewPassword: renew_password,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+        .then((response) => response.json())
+        .then((json) => console.log(json));
+      }
+    if passwordError
+      .alert.alert-warning= passwordError
+    if updateError
+      .alert.alert-warning= updateError
+    if error
+      .alert.alert-warning= error
+    if noplasticmoney
+      .alert.alert-info Você não tem nenhum cartão cadastrado
+    else
+      for card in responseArray
+        .card.border-light.mb-3.bg-light
+          .card-body.pt-3
+            // Bordered Tabs
+            ul.nav.nav-tabs.nav-tabs-bordered
+              li.nav-item
+                button.nav-link.active(data-bs-toggle='tab', data-bs-target='#profile-overview') Dados
+              li.nav-item
+                button.nav-link(data-bs-toggle='tab', data-bs-target='#profile-edit') Editar Cartão
+              li.nav-item
+                button.nav-link(data-bs-toggle='tab', data-bs-target='#profile-delete-account') Deletar Cartão
+            .tab-content.pt-2
+              #profile-overview.tab-pane.fade.show.active.profile-overview
+                h5.card-title Detalhes do Cartão
+                .row
+                  .col-lg-3.col-md-4.label Nome
+                  .col-lg-9.col-md-8 #{name}
+                  //-.col-lg-9.col-md-8 #{card.name}
+                .row
+                  .col-lg-3.col-md-4.label Número
+                  .col-lg-9.col-md-8 #{number}
+                  //-.col-lg-9.col-md-8 #{card.number}
+                .row
+                  .col-lg-3.col-md-4.label Bandeira
+                  .col-lg-9.col-md-8 #{issuer}
+                  //-.col-lg-9.col-md-8 #{card.issuer}
+                .row
+                  .col-lg-3.col-md-4.label Data de expiração
+                  .col-lg-9.col-md-8 #{expiry}
+                  //-.col-lg-9.col-md-8 #{card.expiry}
+                .row
+                  .col-lg-3.col-md-4.label CVV
+                  .col-lg-9.col-md-8 #{cvv}
+                  //-.col-lg-9.col-md-8 #{card.cvv}
+                .row
+                  .col-lg-3.col-md-4.label Modalidade
+                  .col-lg-9.col-md-8 #{modality}
+                  //-.col-lg-9.col-md-8 #{card.modality}
+                //-.row
+                  //-.col-lg-3.col-md-4.label Phone
+                  //-.col-lg-9.col-md-8 (436) 486-3538 x29071
+                //-.row
+                  //-.col-lg-3.col-md-4.label Email
+                  //-.col-lg-9.col-md-8 k.anderson@example.com
+              #profile-edit.tab-pane.fade.profile-edit.pt-3
+                // Profile Edit Form
+                form(method='post' action='./edit')
+                  .row.mb-3
+                    label.col-md-4.col-lg-3.col-form-label(for='number') Número atual
+                    .col-md-8.col-lg-9
+                      input#number.form-control.disabled(name='number', type='text' disabled, value= number)
+                  .row.mb-3
+                    label.col-md-4.col-lg-3.col-form-label(for='name') Nome
+                    .col-md-8.col-lg-9
+                      input#name.form-control.disabled(name='name', type='text', value= name)
+                  .row.mb-3
+                    label.col-md-4.col-lg-3.col-form-label(for='number') Número
+                    .col-md-8.col-lg-9
+                      input#number.form-control(name='new_number', type='text', value= number)
+                  .row.mb-3
+                    label.col-md-4.col-lg-3.col-form-label(for='issuer') Bandeira
+                    .col-md-8.col-lg-9
+                      select#issuer.form-control(name='issuer')
+                        option Visa
+                        option Mastercard
+                  .row.mb-3
+                    label.col-md-4.col-lg-3.col-form-label(for='expiry') Data de expiração
+                    .col-md-8.col-lg-9
+                      input#expiry.form-control(name='expiry', type='text', value= expiry)
+                  .row.mb-3
+                    label.col-md-4.col-lg-3.col-form-label(for='cvv') CVV
+                    .col-md-8.col-lg-9
+                      input#cvv.form-control(name='cvv', type='text', value= cvv)
+                  .row.mb-3
+                    label.col-md-4.col-lg-3.col-form-label(for='modality') Modalidade
+                    .col-md-8.col-lg-9
+                      select#modality.form-control(name='modality')
+                        option crédito
+                        option débito
+                  .text-center
+                    button.btn.btn-outline-info(type='submit' ) Salvar Mudanças do Cartão de numero #{number}
+                // End Profile Edit Form
+              #profile-delete-account.tab-pane.fade.pt-3
+                  .card.text-white.bg-warning.mb-3
+                    .card-body
+                      h5.card-header Deseja mesmo deletar este Cartão?
+                      p.card-text
+                        | não será possível recuperar nenhum dado sobre este cartão
+                      form(method='' action='')
+                        .text-center
+                          button.btn.btn-danger.card-link(onclick="deleteCard(this.innerText)" type="button") Deletar Cartão de número #{number}
+                          //-a.card-link(href='#') Another link
+    .container
+      .row
+        .text-center
+          a.btn.btn-primary(href='?/add') Adicionar Cartão
