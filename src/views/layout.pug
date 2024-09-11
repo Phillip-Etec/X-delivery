@@ -1,0 +1,91 @@
+doctype html
+
+head
+  meta(lang="pt-br")
+  meta(charset='utf-8')
+  if title
+    title= title
+  else
+    title X-Delivery
+  meta(charset='UTF-8')
+  meta(http-equiv='x-ua-compatible' content='ie-edge')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+
+  block styles
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css')
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH' crossorigin='anonymous')
+    link(href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css', rel='stylesheet')
+    link(rel='stylesheet' href='/css/theme.css')
+    //-link(rel='stylesheet' href='/css/style.css')
+
+  body
+
+    //-nav.navbar.navbar-expand-lg.bg-light
+      //-.container-fluid
+        //-a.navbar-brand(href='/') X-Delivery
+        //-button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+          //-span.navbar-toggler-icon
+        //-#navbarSupportedContent.collapse.navbar-collapse
+          //-ul.navbar-nav.me-auto.mb-2.mb-lg-0
+            //-li.nav-item
+              //-a.nav-link.active(aria-current='page', href='/') Home
+            //-li.nav-item
+              //-a.nav-link(href='#') Link
+            //-li.nav-item.dropdown
+              //-a.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false')
+                //-| Usuário
+              //-ul.dropdown-menu
+                //-li
+                  //-a.dropdown-item(href='/plasticmoney') Cartões
+                //-li
+                  //-a.dropdown-item(href='/address') Endereços
+                //-li
+                  //-hr.dropdown-divider
+                //-li
+                  //-a.dropdown-item(href='/profile') Perfil
+            //-li.nav-item
+              //-a.nav-link.disabled Produtos
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light
+          .container.px-4.px-lg-5
+            a.navbar-brand(href='/') X-Delivery
+            button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+              span.navbar-toggler-icon
+            #navbarSupportedContent.collapse.navbar-collapse
+              ul.navbar-nav.me-auto.mb-2.mb-lg-0.ms-lg-4
+                li.nav-item
+                  a.nav-link.active(aria-current='page', href='/') Home
+                li.nav-item
+                  a.nav-link(href='/about') Sobre
+                li.nav-item
+                  a.nav-link(href='/products') Produtos
+                li.nav-item.dropdown
+                  a#navbarDropdown.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false') Minha Conta
+                  ul.dropdown-menu(aria-labelledby='navbarDropdown')
+                    li
+                      a.dropdown-item(href='/profile') Perfil
+                    li
+                      hr.dropdown-divider
+                    li
+                      a.dropdown-item(href='/plasticmoney') Meus Cartões
+                    li
+                      a.dropdown-item(href='/address') Endereços
+              //-if !user
+                  //-a.btn.btn-outline-dark( href="/login" )
+                    //-i.bi.bi-box-arrow-in-right.me-1
+                                              //-Login
+                    //-span.badge.bg-light.text-dark.ms-1.rounded-pill Login
+              //-else
+              form.d-flex
+                button.btn.btn-outline-dark(type='submit')
+                  i.bi-cart-fill.me-1
+                                            Cart
+                  span.badge.bg-dark.text-white.ms-1.rounded-pill 0
+
+    .py-2
+      block content
+
+    //-footer.py-5.bg-dark
+          //-.container
+            //-p.m-0.text-center.text-white Copyright &copy; Your Website 2023
+  block scripts
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js' integrity='sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM' crossorigin='anonymous')

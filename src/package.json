@@ -1,0 +1,35 @@
+{
+  "name": "x-delivery-prisma",
+  "version": "0.2.1",
+  "description": "mock de ecommerce",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm ../test/bateria.js",
+    "start": "node server.js",
+    "watch": "nodemon server.js --ext 'js,pug'",
+    "pug": "pug views/creditcardadd.pug"
+  },
+  "keywords": [
+    "mock",
+    "ecommerce"
+  ],
+  "author": "Phill",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "connect-livereload": "^0.6.1",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "http-errors": "^2.0.0",
+    "livereload": "^0.9.3",
+    "morgan": "^1.10.0",
+    "next": "^14.2.8",
+    "nodemon": "^3.1.4",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pug": "^3.0.3",
+    "sequelize": "^6.37.3",
+    "sqlite3": "^5.1.7"
+  }
+}
