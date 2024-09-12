@@ -1,9 +1,11 @@
-const express = require('express');
-const dashboardController = require('../controllers/dashboard');
-const { protectRoute } = require('../auth');
+import express from 'express';
+import dashboardController from '../controllers/dashboard.js';
+import auth from '../auth.js';
+
+const { protectRoute } = auth;
 
 const router = express.Router();
 
 router.get('/',  dashboardController.dashboardView);
 
-module.exports = router;
+export default router;

@@ -1,26 +1,34 @@
-const path = require('path');
-const createError = require("http-errors");
-const bodyParser = require('body-parser');
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const express = require('express');
-const session = require('express-session');
+import createError from "http-errors";
+import bodyParser from 'body-parser';
 
-const passport = require('passport');
+import express from 'express';
+import session from 'express-session';
 
-const livereload = require('livereload');
-const connectLiveReload = require('connect-livereload');
+import passport from 'passport';
 
-const logger = require('morgan');
+import livereload from 'livereload';
+import connectLiveReload from 'connect-livereload';
+
+import logger from 'morgan';
 
 // routes 
-const authRoutes = require('./routes/auth');
-const dashboardRoutes = require('./routes/dashboard');
-const profileRoutes = require('./routes/profile');
-const creditCardRoutes = require('./routes/creditcard');
+import authRoutes from './routes/auth.js';
+import dashboardRoutes from './routes/dashboard.js';
+import profileRoutes from './routes/profile.js';
+import creditCardRoutes from './routes/creditcard.js';
 
-//const errorHandler = require('./error-handler');
-const db = require('./db/database');
-const { init: initAuth } = require('./auth');
+//import errorHandler from './error-handler';
+import db from './db/database.js';
+import auth from './auth.js';
+
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
+
+//const { initAuth } = auth.init;
+
 const liveReloadServer = livereload.createServer();
 
 liveReloadServer.server.once("connection", () => {
@@ -44,7 +52,7 @@ app.use( logger( "dev" ) );
 
 app.use( express.static( path.join( __dirname, "public" ) ) )
 
-initAuth();
+auth.init();
 app.use( session ({
     secret: 'secret',
     saveUninitialized: true,
@@ -65,39 +73,39 @@ app.use( ( req, res, next ) => {
     next( createError( 404 ) );
 });
 
-// error handler
-app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get("env") === "development" ? err : {};
+//// error handler
+//app.use(function (err, req, res, next) {
+    //// set locals, only providing error in development
+    //res.locals.message = err.message;
+    //res.locals.error = req.app.get("env") === "development" ? err : {};
 
-    // render the error page
-    res.status(err.status || 500);
-    switch( res.status ) {
-        case 403:
-            // render
-            break;
-        case 404:
-            // render
-            break;
-        case 500:
-            // render
-            break;
-        case 502:
-            // render
-            break;
-        case 503:
-            // render
-            break;
-        case 504:
-            // render
-            break;
-        default:
-            //render 500
-            break;
-    }
-    res.render("errors/error404");
-});
+    //// render the error page
+    //res.status(err.status || 500);
+    //switch( res.status ) {
+        //case 403:
+            //// render
+            //break;
+        //case 404:
+            //// render
+            //break;
+        //case 500:
+            //// render
+            //break;
+        //case 502:
+            //// render
+            //break;
+        //case 503:
+            //// render
+            //break;
+        //case 504:
+            //// render
+            //break;
+        //default:
+            ////render 500
+            //break;
+    //}
+    //res.render("errors/error404");
+//});
 
 db.sync({ force: false })
     .then( () => {

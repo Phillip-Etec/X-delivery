@@ -1,39 +1,34 @@
-//const bcrypt = require('bcrypt')
-const { encrypt, decrypt } = require('../functions/encrypt');
-const CreditCard = require('../models/CreditCard');
-const { User } = require('../models/User');
+//import bcrypt from 'bcrypt';
+import { encrypt, decrypt } from '../functions/encryption.js';
+import CreditCard from '../models/CreditCard.js';
+import User from '../models/User.js';
 
-module.exports = {
+//import { User } from '../models/User.js';
 
-    creditCardView: (req, res) => {
+export default {
+
+    creditCardView: async (req, res) => {
         const user = req.user;
         const empty = [];
         let no_cards_found = false;
-        let responseArray ;
-        CreditCard.findAndCountAll( {
+        let responseArray = [];
+        await CreditCard.findAndCountAll( {
             where: { user_id: user.id },
         } ).then
         ((results ) => 
             {
-                console.log(typeof( results.rows ));
-                if(results.count === 0) {
-                    no_cards_found = true;
-                    responseArray = [];
-                } else { 
-                    no_cards_found = false; 
-                    responseArray = results.rows;
-                } 
+                //console.log( results.rows );
+                responseArray = Array.from( results.rows );
             }
-        )
+        );
         
         //TODO: decrypt credit card details before sending them
-        /*
-         *for( let i=0; i<responseArray.length; i++ ) {
-         *    responseArray[i].number = decrypt( responseArray[i].number );
-         *    responseArray[i].cvv = decrypt( responseArray[i].cvv );
-         *}
-         */
-        console.log(responseArray)
+        for( let i=0; i<responseArray.length; i++ ) {
+            responseArray[i].number = decrypt( responseArray[i].number );
+            responseArray[i].cvv = decrypt( responseArray[i].cvv );
+        }
+        
+        console.log(`responseArray: ${responseArray}`);
         if ( no_cards_found ) {
             res.render('creditcardadd', {
                 noplasticmoney: no_cards_found,
@@ -42,7 +37,7 @@ module.exports = {
         } else {
             res.render('creditcardadd', {
                 noplasticmoney: no_cards_found,
-                responseArray: [],
+                responseArray: responseArray,
             });
         }
     },
@@ -67,16 +62,12 @@ module.exports = {
             return res.json({ success: false, error: 'um cartão com este número já está cadastrado' });
         }
         //TODO: find issuer and modality id before inserting;
-        enc_number = encrypt(number);
-        enc_cvv = encrypt(cvv);
         await CreditCard.create( {
             name: name,
             issuer: issuer,
-            number_iv: enc_number.iv,
-            number: enc_number.encryptedData,
+            number: encrypt(number),
             expiry: parseDate(expiry),
-            cvv_iv: enc_cvv.iv,
-            cvv: enc_cvv.encryptedData,
+            cvv: encrypt(cvv),
             modality: modality,
             user_id : req.user.id,
         } );
@@ -93,7 +84,7 @@ module.exports = {
         cards = await CreditCard.findAll( {
             where: { user_id: req.user.id }
         } );
-
+        
         if( !cards ) {
             res.redirect('/plasticmoney', { error: 'Você não tem nenhum cartão registrado' });
         }
@@ -114,7 +105,7 @@ module.exports = {
                 issuer: issuer,
                 number: encrypt( new_number ),
                 expiry: parseDate(expiry),
-                cvv: encrypt( cvv, 8 ),
+                cvv: encrypt( cvv ),
                 modality: modality,
                 user_id : req.user.id,
             } );
@@ -131,7 +122,7 @@ module.exports = {
             res.redirect('/plasticmoney', { error: 'Você não tem nenhum cartão registrado' });
         }
         for( card in cards ) {
-            if( decrypt({iv: card.number_iv, encryptedData: card.number}) === number ) {
+            if( decrypt(card.number) === number ) {
                 cardFound = true;
                 creditCard = card;
                 break;

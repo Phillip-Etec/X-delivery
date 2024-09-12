@@ -1,8 +1,8 @@
-const bcrypt = require('bcryptjs');
-const User = require('../models/User');
-const passport = require('passport');
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+import passport from 'passport';
 
-module.exports = {
+export default {
 
     registerView: (req, res) => {
         res.render('register');

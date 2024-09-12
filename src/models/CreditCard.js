@@ -1,8 +1,8 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const User = require('./User');
-const sequelize = require('../db/database');
+import { Sequelize, DataTypes } from 'sequelize';
+import User from './User.js';
+import sequelize from '../db/database.js';
 
-const CardModel = sequelize.define(
+let CardModel = sequelize.define(
     'CreditCard',
     {
 
@@ -24,12 +24,6 @@ const CardModel = sequelize.define(
             allowNull: false,
         },
 
-        // para o crypto.cipherIV
-        number_iv: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-
         number: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -37,12 +31,6 @@ const CardModel = sequelize.define(
 
         expiry: {
             type: DataTypes.DATEONLY,
-            allowNull: false,
-        },
-
-        // para o crypto.cipherIV
-        cvv_iv: {
-            type: DataTypes.STRING,
             allowNull: false,
         },
 
@@ -78,4 +66,4 @@ const CardModel = sequelize.define(
     },
 );
 
-module.exports = CardModel;
+export { CardModel as default };

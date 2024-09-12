@@ -1,16 +1,16 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local');
-const bcrypt = require('bcryptjs');
-const User = require("./models/User");
+import passport from 'passport';
+import LocalStrategy from 'passport-local';
+import bcrypt from 'bcryptjs';
+import User from './models/User.js';
 
-module.exports = {
+export default {
 
     init: () => {
 
         passport.use(
             new LocalStrategy( { usernameField: 'email' }, 
                 async (email, password, done) => {
-                const user = await User.findOne({where: { email }});
+                    const user = await User.findOne({where: { email }});
                     if(!user) { 
                         return done( null, false, { error: 'usuário ou senha incorreto' } );
                     }

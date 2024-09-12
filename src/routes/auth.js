@@ -1,6 +1,6 @@
-const express = require('express');
-const authController = require('../controllers/auth');
-const dashboardController = require('../controllers/dashboard');
+import express from 'express';
+import authController from '../controllers/auth.js';
+import dashboardController from '../controllers/dashboard.js';
 
 const router = express.Router();
 router.get('/register', authController.registerView);
@@ -9,4 +9,4 @@ router.get('/logout', authController.logoutUser);
 router.post('/register', authController.registerUser);
 router.post('/login', authController.loginUser);
 
-module.exports = router;
+export default router;

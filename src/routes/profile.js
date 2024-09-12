@@ -1,6 +1,8 @@
-const express = require('express');
-const profileController = require('../controllers/profile');
-const { protectRoute, idParamsRoute } = require('../auth');
+import express from 'express';
+import profileController from '../controllers/profile.js';
+import auth from '../auth.js';
+
+const { protectRoute, idParamsRoute } = auth;
 
 const router = express.Router();
 
@@ -10,4 +12,4 @@ router.delete('/profile/:userId/delete', idParamsRoute, profileController.delete
 router.post('/profile/:userId/password', idParamsRoute, profileController.updateUserPassword);
 router.post('/profile/:userId', idParamsRoute, profileController.updateUserProfile);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     dashboardView: (req, res) => {
         if(req.isAuthenticated ()) {
             res.render( 'dashboard', { 

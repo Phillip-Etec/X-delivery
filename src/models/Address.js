@@ -1,8 +1,8 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const User = require('User');
-const sequelize = require('../db/database');
+import { Sequelize, DataTypes } from 'sequelize';
+import User from './User.js';
+import sequelize from '../db/database.js';
 
-AddressModel = sequelize.define(
+let AddressModel = sequelize.define(
     'Address',
     {
 
@@ -94,4 +94,4 @@ AddressModel = sequelize.define(
 
 // relations
 
-module.exports = UserModel;
+export { AddressModel as default };

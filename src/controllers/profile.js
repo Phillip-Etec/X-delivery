@@ -1,8 +1,8 @@
-const bcrypt = require('bcryptjs');
-const User = require('../models/User');
-const passport = require('passport');
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+import passport from 'passport';
 
-module.exports = {
+export default {
 
     profileView: (req, res) => {
         // don't foget to check if user is authenticated first
@@ -57,6 +57,7 @@ module.exports = {
         if( req.isAuthenticated() ) {
             const user = req.user;
             const { name, email, rnp, birthday, gender } = req.body;
+            let updated_gender, updated_birthday = '';
             // checar se todos os campos foram preenchidos
             if(!name || !email || !rnp || !birthday || !gender) {
                 return res.render(`profile`, { updateError: 'Por favor, preencha todos os campos necessários' });
@@ -105,6 +106,10 @@ module.exports = {
         // checar se todos os campos foram preenchidos
         if(!password || !newPassword || !renewPassword) {
             return res.render(`profile`, { passwordError: 'Por favor, preencha todos os campos necessários' });
+        }
+        // checar se a senha enviada é correta
+        if(!bcrypt.compareSync(password, user.password)) { 
+            return res.render( `profile`, { passwordError: 'Senha incorreta' } ); 
         }
         // checar se a nova senha é a mesma à atual
         if(bcrypt.compareSync(newPassword, user.password)) { 

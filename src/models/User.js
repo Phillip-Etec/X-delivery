@@ -1,7 +1,7 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../db/database');
+import { Sequelize, DataTypes } from 'sequelize';
+import sequelize from '../db/database.js';
 
-module.exports = sequelize.define(
+let user = sequelize.define(
     'User',
     {
 
@@ -64,3 +64,5 @@ module.exports = sequelize.define(
 
     },
 );
+
+export { user as default };

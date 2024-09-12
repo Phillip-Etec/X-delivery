@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 // import { secret_key, secret_iv, encryption_method } from '../config.js'
 
 const secret_key        = 'byz9VFNtbRQM0yBODcCb1lrUtVVH3D3x'
@@ -22,8 +22,7 @@ if (!secret_key || !secret_iv || !encryption_method) {
    .substring(0, 16)
 
 // Encrypt data
-// export 
-function encrypt(data) {
+export function encrypt(data) {
   const cipher = crypto.createCipheriv(encryption_method, key, encryptionIV)
   return Buffer.from(
     cipher.update(data, 'utf8', 'hex') + cipher.final('hex')
@@ -31,8 +30,7 @@ function encrypt(data) {
 }
 
 //// Decrypt data
-// export 
-function decrypt(encryptedData) {
+export function decrypt(encryptedData) {
   const buff = Buffer.from(encryptedData, 'base64')
   const decipher = crypto.createDecipheriv(encryption_method, key, encryptionIV)
   return (
@@ -40,5 +38,3 @@ function decrypt(encryptedData) {
     decipher.final('utf8')
   ) // Decrypts data and converts to utf8
 }
-
-module.exports = decrypt, encrypt;

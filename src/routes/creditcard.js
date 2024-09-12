@@ -1,6 +1,8 @@
-const express = require('express');
-const creditCardController = require('../controllers/creditcard');
-const { protectRoute, idParamsRoute } = require('../auth');
+import express from 'express';
+import creditCardController from '../controllers/creditcard.js';
+import auth from '../auth.js';
+
+const { protectRoute, idParamsRoute } = auth;
 
 const router = express.Router();
 
@@ -11,4 +13,4 @@ router.delete('/plasticmoney/:userId/delete', idParamsRoute, creditCardControlle
 router.post('/plasticmoney/:userId/edit', idParamsRoute, creditCardController.updateCreditCard);
 router.post('/plasticmoney/:userId/add', idParamsRoute, creditCardController.addCreditCard);
 
-module.exports = router;
+export default router;

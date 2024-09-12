@@ -2,6 +2,7 @@
   "name": "x-delivery-prisma",
   "version": "0.2.1",
   "description": "mock de ecommerce",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "test": "npm ../test/bateria.js",
