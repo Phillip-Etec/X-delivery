@@ -139,17 +139,17 @@ block content
                   .text-center
                     button.btn.btn-outline-info(type='submit' ) Salvar Mudanças do Cartão de numero #{number}
                 // End Profile Edit Form
-              div(id='profile-delete-account'+ count class='tab-pane fade pt-3')
-                  .card.text-white.bg-warning.mb-3
-                    .card-body
-                      h5.card-header Deseja mesmo deletar este Cartão?
-                      p.card-text
-                        | não será possível recuperar nenhum dado sobre este cartão
-                      form(method='' action='')
-                        .text-center
-                          button.btn.btn-danger.card-link(onclick="deleteCard(this.innerText)" type="button") Deletar Cartão de número #{number}
-                          //-a.card-link(href='#') Another link
+              div(id='profile-delete-account'+count class='tab-pane fade pt-3')
+                .card.text-white.bg-warning.mb-3
+                  .card-body
+                    h5.card-header Deseja mesmo deletar este Cartão?
+                    p.card-text
+                      | não será possível recuperar nenhum dado sobre este cartão
+                    form(method='' action='')
+                      .text-center
+                        button.btn.btn-danger.card-link(onclick="deleteCard(this.innerText)" type="button") Deletar Cartão de número #{number}
+                        //-a.card-link(href='#') Another link
     .container
       .row
         .text-center
-          a.btn.btn-primary(href='?/add') Adicionar Cartão
+          a.btn.btn-primary(href=user.id+'/add') Adicionar Cartão

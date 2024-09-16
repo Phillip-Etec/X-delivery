@@ -38,7 +38,7 @@ export default {
             state  : state  ,
             county : county ,
             region : region ,
-            user_id = req.user.id,
+            user_id : req.user.id,
         } );
         res.redirect('placeholder/url');
     },

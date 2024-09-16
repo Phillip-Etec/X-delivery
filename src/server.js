@@ -32,36 +32,36 @@ const __dirname = path.dirname(__filename); // get the name of the directory
 const liveReloadServer = livereload.createServer();
 
 liveReloadServer.server.once("connection", () => {
-  setTimeout(() => {
-    liveReloadServer.refresh("/");
-  }, 100);
+    setTimeout(() => {
+        liveReloadServer.refresh("/");
+    }, 100);
 });
 
 const app = express();
 const PORT = 9516;
 
-app.use( connectLiveReload() );
+app.use(connectLiveReload());
 
 //app.use( errorHandler );
-app.use( bodyParser.json() );
+app.use(bodyParser.json());
 //app.use( express.urlencoded( {extended: false} ) );
-app.use( bodyParser.urlencoded( {extended: true} ) );
-app.set( 'view engine', 'pug' );
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'pug');
 
-app.use( logger( "dev" ) );
+app.use(logger("dev"));
 
-app.use( express.static( path.join( __dirname, "public" ) ) )
+app.use(express.static(path.join(__dirname, "public")))
 
 auth.init();
-app.use( session ({
+app.use(session({
     secret: 'secret',
     saveUninitialized: true,
     resave: true
-}) );
+}));
 
 
-app.use( passport.initialize() );
-app.use( passport.session() );
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', authRoutes);
 app.use('/', dashboardRoutes);
@@ -69,45 +69,45 @@ app.use('/', profileRoutes);
 app.use('/', creditCardRoutes);
 
 // catch 404 and forward to error handler
-app.use( ( req, res, next ) => {
-    next( createError( 404 ) );
-});
+// app.use( ( req, res, next ) => {
+//     next( createError( 404 ) );
+// });
 
 //// error handler
 //app.use(function (err, req, res, next) {
-    //// set locals, only providing error in development
-    //res.locals.message = err.message;
-    //res.locals.error = req.app.get("env") === "development" ? err : {};
+//// set locals, only providing error in development
+//res.locals.message = err.message;
+//res.locals.error = req.app.get("env") === "development" ? err : {};
 
-    //// render the error page
-    //res.status(err.status || 500);
-    //switch( res.status ) {
-        //case 403:
-            //// render
-            //break;
-        //case 404:
-            //// render
-            //break;
-        //case 500:
-            //// render
-            //break;
-        //case 502:
-            //// render
-            //break;
-        //case 503:
-            //// render
-            //break;
-        //case 504:
-            //// render
-            //break;
-        //default:
-            ////render 500
-            //break;
-    //}
-    //res.render("errors/error404");
+//// render the error page
+//res.status(err.status || 500);
+//switch( res.status ) {
+//case 403:
+//// render
+//break;
+//case 404:
+//// render
+//break;
+//case 500:
+//// render
+//break;
+//case 502:
+//// render
+//break;
+//case 503:
+//// render
+//break;
+//case 504:
+//// render
+//break;
+//default:
+////render 500
+//break;
+//}
+//res.render("errors/error404");
 //});
 
 db.sync({ force: false })
-    .then( () => {
+    .then(() => {
         app.listen(PORT, console.log('Server is running on port: ' + PORT));
-    } );
+    });

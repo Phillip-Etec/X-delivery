@@ -8,26 +8,26 @@ export default {
     init: () => {
 
         passport.use(
-            new LocalStrategy( { usernameField: 'email' }, 
+            new LocalStrategy({ usernameField: 'email' },
                 async (email, password, done) => {
-                    const user = await User.findOne({where: { email }});
-                    if(!user) { 
-                        return done( null, false, { error: 'usuário ou senha incorreto' } );
+                    const user = await User.findOne({ where: { email } });
+                    if (!user) {
+                        return done(null, false, { error: 'usuário ou senha incorreto' });
                     }
-                    if(!bcrypt.compareSync(password, user.password)) { 
-                        return done( null, false, { error: 'usuário ou senha incorreto' } ); 
+                    if (!bcrypt.compareSync(password, user.password)) {
+                        return done(null, false, { error: 'usuário ou senha incorreto' });
                     }
-                    return done( null, user );
-                } )
+                    return done(null, user);
+                })
         );
 
-        passport.serializeUser((user, done) => {;
-            done( null, user.id );
+        passport.serializeUser((user, done) => {
+            done(null, user.id);
         });
 
         passport.deserializeUser(async (id, done) => {
-            const user = await User.findOne({where: { id }});
-            done( null, user );
+            const user = await User.findOne({ where: { id } });
+            done(null, user);
         });
 
 
@@ -52,7 +52,7 @@ export default {
     },
 
     protectRoute: (req, res, next) => {
-        if(req.isAuthenticated()) {
+        if (req.isAuthenticated()) {
             return next();
         }
         res.redirect('/login?next=' + req.url);
@@ -61,10 +61,10 @@ export default {
     idParamsRoute: (req, res, next) => {
         //console.log(req.params);
         //console.log(req.user.dataValues.id);
-        if(req.isAuthenticated() && req.params.userId == req.user.dataValues.id) {
+        if (req.isAuthenticated() && req.params.userId == req.user.dataValues.id) {
             return next();
         }
-        res.redirect('/' );
+        res.redirect('/');
     },
 
     /*
