@@ -44,8 +44,7 @@ app.use(connectLiveReload());
 
 //app.use( errorHandler );
 app.use(bodyParser.json());
-//app.use( express.urlencoded( {extended: false} ) );
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.set('view engine', 'pug');
 
 app.use(logger("dev"));
