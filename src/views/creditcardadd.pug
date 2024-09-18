@@ -11,7 +11,7 @@ block content
         const xhr = new XMLHttpRequest();
         const currentURL = window.location.href;
         xhr.open("DELETE", currentURL + '/delete');
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
         const body = JSON.stringify({
           number: number,
         });
@@ -19,9 +19,10 @@ block content
           if (xhr.readyState == 4 && xhr.status == 201) {
             console.log(JSON.parse(xhr.responseText));
           } else {
-            console.log(`Error: ${xhr.status}`);
+            console.log(`Error: ${xhr.responseText}`);
           }
         };
+        console.log(body);
         xhr.send(body);
       }
 
@@ -137,7 +138,7 @@ block content
                         option crédito
                         option débito
                   .text-center
-                    button.btn.btn-outline-info(type='submit' ) Salvar Mudanças do Cartão de numero #{number}
+                    button.btn.btn-outline-info(type='submit' ) Salvar Mudanças do Cartão de numero #{card.number}
                 // End Profile Edit Form
               div(id='profile-delete-account'+count class='tab-pane fade pt-3')
                 .card.text-white.bg-warning.mb-3
@@ -147,9 +148,9 @@ block content
                       | não será possível recuperar nenhum dado sobre este cartão
                     form(method='' action='')
                       .text-center
-                        button.btn.btn-danger.card-link(onclick="deleteCard(this.innerText)" type="button") Deletar Cartão de número #{number}
+                        button.btn.btn-danger.card-link(onclick="deleteCard(this.innerText)" type="button") Deletar Cartão de número #{card.number}
                         //-a.card-link(href='#') Another link
     .container
       .row
         .text-center
-          a.btn.btn-primary(href=user.id+'/add') Adicionar Cartão
+          a.btn.btn-primary(href=id+'/add') Adicionar Cartão

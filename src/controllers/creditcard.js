@@ -30,11 +30,13 @@ export default {
             res.render('creditcardadd', {
                 noplasticmoney: no_cards_found,
                 responseArray: empty,
+                id: req.user.id,
             });
         } else {
             res.render('creditcardadd', {
                 noplasticmoney: no_cards_found,
                 responseArray: cards_array,
+                id: req.user.id,
             });
         }
     },
@@ -78,14 +80,14 @@ export default {
         if (!name || !issuer || !number || !expiry || !cvv || !modality || !new_number) {
             return res.render(`/placeholder/url/`, { error: 'por favor, preencha todos os campos necessários' });
         }
-        cards = await CreditCard.findAll({
+        const cards = await CreditCard.findAll({
             where: { user_id: req.user.id }
         });
 
         if (!cards) {
             res.redirect('/plasticmoney', { error: 'Você não tem nenhum cartão registrado' });
         }
-        for (card in cards) {
+        for (let card in cards) {
             if (decrypt(card.number) == number) {
                 cardFound = true;
                 creditCard = card;
@@ -112,29 +114,35 @@ export default {
 
     deleteCreditCard: async (req, res) => {
         const { number } = req.body;
-        cards = CreditCard.findAll({
-            where: { user_id: req.user.id }
-        })
-        if (!cards) {
-            res.redirect('/plasticmoney', { error: 'Você não tem nenhum cartão registrado' });
+        if (!number) {
+            return res.json({ error: 'Número do cartão não fornecido' });
         }
-        for (card in cards) {
-            if (decrypt(card.number) === number) {
+        let creditCard;
+        let cardFound = false;
+        let cards = [];
+        await CreditCard.findAll({
+            where: { user_id: req.user.id }
+        }).then((results) => {
+            cards = Array.from(results);
+        });
+        if (!cards) {
+            return res.json({ error: 'Você não tem nenhum cartão registrado' });
+        }
+        for (let i = 0; i < cards.length; i++) {
+            if (decrypt(cards[i].number) === number) {
                 cardFound = true;
-                creditCard = card;
+                creditCard = cards[i];
                 break;
             }
         }
-
+        //
         if (!cardFound) {
-            res.redirect('/plasticmoney', { error: 'Você não tem nenhum cartão registrado com este número' });
+            return res.json({ error: 'Você não tem nenhum cartão registrado com este número' });
         }
         else {
-            creditCard.destroy().
-                then(res.redirect(''));
-
+            await creditCard.destroy();
         }
-        res.redirect('');
+        return res.json({ success: true });
     },
 
 };
