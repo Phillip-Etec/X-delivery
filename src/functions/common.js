@@ -1,17 +1,17 @@
 
-module.exports = {
-    dateStringRearrange : (str) => {
+export default {
+    dateStringRearrange: (str) => {
         reversed = []
         inorder = str.split('-')
-        for( i=0,j=inorder.length-1; i<inorder.length; i++, j-- ) {
+        for (i = 0, j = inorder.length - 1; i < inorder.length; i++, j--) {
             reversed[j] = inorder[i]
         }
-        return reversed.join().replaceAll(',','/')
+        return reversed.join().replaceAll(',', '/')
     },
 
-    genderToAcronym: ( str ) => {
+    genderToAcronym: (str) => {
         let genderAcronym = '';
-        switch(str) {
+        switch (str) {
             case 'prefiro não informar':
                 genderAcronym = 'NA';
                 break;
@@ -29,4 +29,5 @@ module.exports = {
         }
         return genderAcronym;
     }
+
 };

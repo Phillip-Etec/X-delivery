@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 // import { secret_key, secret_iv, encryption_method } from '../config.js'
 
-const secret_key        = 'byz9VFNtbRQM0yBODcCb1lrUtVVH3D3x'
-const secret_iv         = 'X05IGQ5qdBnIqAWD'
+const secret_key = 'byz9VFNtbRQM0yBODcCb1lrUtVVH3D3x'
+const secret_iv = 'X05IGQ5qdBnIqAWD'
 const encryption_method = 'aes-256-cbc'
 
 if (!secret_key || !secret_iv || !encryption_method) {
@@ -21,7 +21,12 @@ const encryptionIV = crypto
     .digest('hex')
     .substring(0, 16)
 
-// Encrypt data
+/**
+ * Encrypts a string with the method provided by the config file,
+ * then converts it to base64 so it can be stored with just 1 value
+ * @param {string} data - The data to be encrypted
+ * @returns {string} Returns the data encrypted in base64.
+ */
 export function encrypt(data) {
     const cipher = crypto.createCipheriv(encryption_method, key, encryptionIV)
     return Buffer.from(
@@ -29,12 +34,17 @@ export function encrypt(data) {
     ).toString('base64') // Encrypts data and converts to hex and base64
 }
 
-//// Decrypt data
+/**
+ * Decrypts a base64 string with the method provided by the config file,
+ * then converts it to utf-8
+ * @param {string} encryptedData - The data to be decrypted, in base64
+ * @returns {string} Returns the decrypted string in utf-8.
+ */
 export function decrypt(encryptedData) {
     const buff = Buffer.from(encryptedData, 'base64')
     const decipher = crypto.createDecipheriv(encryption_method, key, encryptionIV)
     return (
         decipher.update(buff.toString('utf8'), 'hex', 'utf8') +
-            decipher.final('utf8')
+        decipher.final('utf8')
     ) // Decrypts data and converts to utf8
 }
