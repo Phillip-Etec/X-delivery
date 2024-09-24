@@ -57,20 +57,20 @@ block content
     if noplasticmoney
       .alert.alert-info Você não tem nenhum cartão cadastrado
     else
-      for card in responseArray
+      for card, index in responseArray
         - count = count+1
         .card.border-light.mb-3.bg-light
           .card-body.pt-3
             // Bordered Tabs
             ul.nav.nav-tabs.nav-tabs-bordered
               li.nav-item
-                button.nav-link.active(data-bs-toggle='tab', data-bs-target='#profile-overview'+ count) Dados
+                button.nav-link.active(data-bs-toggle='tab', data-bs-target=`#profile-overview${index}`) Dados
               li.nav-item
-                button.nav-link(data-bs-toggle='tab', data-bs-target='#profile-edit'+ count) Editar Cartão
+                button.nav-link(data-bs-toggle='tab', data-bs-target=`#profile-edit${index}`) Editar Cartão
               li.nav-item
-                button.nav-link(data-bs-toggle='tab', data-bs-target='#profile-delete-account'+ count) Deletar Cartão
+                button.nav-link(data-bs-toggle=`tab`, data-bs-target=`#profile-delete-account${index}`) Deletar Cartão
             .tab-content.pt-2
-              div( id='profile-overview'+ count  class='tab-pane fade show active profile-overview')
+              div( id=`profile-overview${index}`  class='tab-pane fade show active profile-overview')
                 h5.card-title Detalhes do Cartão
                 .row
                   .col-lg-3.col-md-4.label Nome
@@ -102,7 +102,7 @@ block content
                 //-.row
                   //-.col-lg-3.col-md-4.label Email
                   //-.col-lg-9.col-md-8 k.anderson@example.com
-              div( id='profile-edit'+ count class='tab-pane fade profile-edit pt-3')
+              div( id=`profile-edit${index}` class='tab-pane fade profile-edit pt-3')
                 // Profile Edit Form
                 form(method='post' action='./edit')
                   .row.mb-3
@@ -140,7 +140,7 @@ block content
                   .text-center
                     button.btn.btn-outline-info(type='submit' ) Salvar Mudanças do Cartão de numero #{card.number}
                 // End Profile Edit Form
-              div(id='profile-delete-account'+count class='tab-pane fade pt-3')
+              div(id=`profile-delete-account${index}` class='tab-pane fade pt-3')
                 .card.text-white.bg-warning.mb-3
                   .card-body
                     h5.card-header Deseja mesmo deletar este Cartão?

@@ -28,16 +28,16 @@ export default {
             return res.render(`/placeholder/url/`, { error: 'por favor, preencha todos os campos necessários' });
         }
         await Address.create( {
-            type   : type   ,
-            alias  : alias  ,
-            zip    : zip    ,
-            number : number ,
-            addon  : addon  ,
-            street : street ,
-            city   : city   ,
-            state  : state  ,
-            county : county ,
-            region : region ,
+            type    : type   ,
+            alias   : alias  ,
+            zip     : zip    ,
+            number  : number ,
+            addon   : addon  ,
+            street  : street ,
+            city    : city   ,
+            state   : state  ,
+            county  : county ,
+            region  : region ,
             user_id : req.user.id,
         } );
         res.redirect('placeholder/url');

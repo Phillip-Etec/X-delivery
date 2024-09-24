@@ -12,33 +12,22 @@ export default {
         let cards_array = [];
         await CreditCard.findAndCountAll({
             where: { user_id: user.id },
-        }).then
-            ((results) => {
-                //console.log( results.rows );
+        }).then(
+            (results) => {
                 cards_array = Array.from(results.rows);
             }
-            );
-
-        //TODO: decrypt credit card details before sending them
+        );
         for (let i = 0; i < cards_array.length; i++) {
             cards_array[i].number = decrypt(cards_array[i].number);
             cards_array[i].cvv = decrypt(cards_array[i].cvv);
         }
-
-        //console.log(`responseArray: ${cards_array}`);
-        if (no_cards_found) {
-            res.render('creditcardadd', {
-                noplasticmoney: no_cards_found,
-                responseArray: empty,
-                id: req.user.id,
-            });
-        } else {
-            res.render('creditcardadd', {
-                noplasticmoney: no_cards_found,
-                responseArray: cards_array,
-                id: req.user.id,
-            });
-        }
+        if (no_cards_found)
+            cards_array = empty;
+        res.render('creditcardadd', {
+            noplasticmoney: no_cards_found,
+            responseArray: cards_array,
+            id: req.user.id,
+        });
     },
 
     creditCardFormView: (req, res) => {
@@ -53,10 +42,20 @@ export default {
 
     addCreditCard: async (req, res) => {
         const { name, issuer, number, expiry, cvv, modality } = req.body;
-        // checar se todos os campos foram preenchidos
+        // checking/sanitizing
         if (!name || !issuer || !number || !expiry || !cvv || !modality) {
             return res.json({ success: false, error: 'por favor, preencha todos os campos necessários' });
         }
+        if (typeof name     !== string ||
+            typeof issuer   !== string ||
+            typeof number   !== string ||
+            typeof expiry   !== string ||
+            typeof cvv      !== string ||
+            typeof modality !== string) {
+            res.json({ success: false, error: 'por favor, preencha todos os campos necessários' });
+            throw new TypeError('One of the values sent by the client is of the wrong type');
+        }
+        // bussiness logic
         if (await CreditCard.findOne({ where: { number: number } })) {
             return res.json({ success: false, error: 'um cartão com este número já está cadastrado' });
         }
@@ -76,40 +75,43 @@ export default {
     updateCreditCard: async (req, res) => {
         const { name, issuer, number, expiry, cvv, modality, new_number } = req.body;
         let cardFound = false;
-        let creditCard;
+        let creditCard, cards;
         if (!name || !issuer || !number || !expiry || !cvv || !modality || !new_number) {
             return res.render(`/placeholder/url/`, { error: 'por favor, preencha todos os campos necessários' });
         }
-        const cards = await CreditCard.findAll({
+        await CreditCard.findAll({
             where: { user_id: req.user.id }
-        });
+        }).then(
+            (results) => {
+                cards = Array.from(results);
+            }
+        );
 
         if (!cards) {
-            res.redirect('/plasticmoney', { error: 'Você não tem nenhum cartão registrado' });
+            return res.redirect(`/plasticmoney`, { error: 'Você não tem nenhum cartão registrado' });
         }
-        for (let card in cards) {
-            if (decrypt(card.number) == number) {
+        for (let i = 0; i < cards.length; i++) {
+            if (decrypt(cards[i].number) == number) {
                 cardFound = true;
-                creditCard = card;
+                creditCard = cards[i];
                 break;
             }
         }
 
         if (!cardFound) {
-            res.redirect('/plasticmoney', { error: 'Você não tem nenhum cartão registrado com este número' });
+            return res.redirect('/plasticmoney', { error: 'Você não tem nenhum cartão registrado com este número' });
         }
-        else {
-            creditCard.update({
-                name: name,
-                issuer: issuer,
-                number: encrypt(new_number),
-                expiry: parseDate(expiry),
-                cvv: encrypt(cvv),
-                modality: modality,
-                user_id: req.user.id,
-            });
-            res.redirect('');
-        }
+
+        creditCard.update({
+            name: name,
+            issuer: issuer,
+            number: encrypt(new_number),
+            expiry: parseDate(expiry),
+            cvv: encrypt(cvv),
+            modality: modality,
+            user_id: req.user.id,
+        });
+        return res.redirect('');
     },
 
     deleteCreditCard: async (req, res) => {
@@ -147,7 +149,13 @@ export default {
 
 };
 
-const parseDate = (str) => {
+/*
+ * Parses a string in the format "dd/mm/YYYY" into a Date object.
+ * Will default to current date if str's format is invalid
+ * @param {string} str: string to be validated and converted into a date object
+ * @returns {Date} Date parsed from string
+ */
+function parseDate(str) {
     var m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     return (m) ? new Date(m[3], m[2] - 1, m[1]) : Date.now();
 }

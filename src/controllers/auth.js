@@ -22,7 +22,7 @@ export default {
         if( await User.findOne( { where: {email} } ) ) {
             return res.render('register', { error: 'Um usuário com este endereço de e-mail já existe' });
         }
-        let genderAcronym = '';
+        let genderAcronym = genderToAcronym(gender);
         switch(gender) {
             case 'prefiro não informar':
                 genderAcronym = 'NA';

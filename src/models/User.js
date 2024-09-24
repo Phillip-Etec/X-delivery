@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import sequelize from '../db/database.js';
 
-let user = sequelize.define(
+let user_model = sequelize.define(
     'User',
     {
 
@@ -65,4 +65,4 @@ let user = sequelize.define(
     },
 );
 
-export { user as default };
+export { user_model as default };
