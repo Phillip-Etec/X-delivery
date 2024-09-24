@@ -12,7 +12,7 @@ export default class ViaCepAddress {
         gia;
         ddd;
         siafi;
-    constructor()(
+    constructor(
         cep,
         logradouro,
         complemento,
