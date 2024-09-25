@@ -1,46 +1,22 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
+import { parseDate, genderToAcronym, dateStringRearrange } from '../helpers/common.js';
 
 export default {
     profileView: (req, res) => {
-        // don't foget to check if user is authenticated first
-        if (!req.isAuthenticated()) {
-            res.redirect("/login?profilerequest");
-        }
         // parse User info and pass as arguments
-        let user_gender = "";
-        switch (req.user.gender) {
-            case "NA":
-                user_gender = "prefiro não informar";
-                break;
-            case "NB":
-                user_gender = "não-binário";
-                break;
-            case "FM":
-                user_gender = "feminino";
-                break;
-            case "ML":
-                user_gender = "masculino";
-                break;
-            default:
-                user_gender = "deu ruim";
-                break;
-        }
+        const user_gender = genderToAcronym(req.user.gender)
         const date = req.user.birthday.toString();
         res.render("profile", {
             name: req.user.name,
             email: req.user.email,
             rnp: req.user.rnp,
             gender: user_gender,
-            birthday: date,
+            birthday: dateStringRearrange(date),
         });
     },
 
     redirectToProfileView: (req, res) => {
-        // check if req is autheticated
-        if (!req.isAuthenticated()) {
-            res.redirect("/login?profilerequest");
-        }
         const id = req.user.id;
         res.redirect(`/profile/${id}`);
     },
@@ -50,38 +26,28 @@ export default {
         const { name, email, rnp, birthday, gender } = req.body;
         let updated_gender,
             updated_birthday = "";
-        // checar se todos os campos foram preenchidos
-        if (!name || !email || !rnp || !birthday || !gender) {
-            return res.render(`profile`, {
-                updateError: "Por favor, preencha todos os campos necessários",
-            });
-        }
-        // checar se o email já está cadastrado
-        if (await User.findOne({ where: { email } })) {
-            return res.render(`profile`, {
-                updateError: "Um usuário com este endereço de e-mail já existe",
-            });
-        }
+        
         updated_gender = genderToAcronym(gender);
         updated_birthday = parseDate(birthday);
-        await user
-            .update({
-                name: req.body.name,
-                email: req.body.email,
-                rnp: req.body.cpf,
+        try {
+            await user.update({
+                name: name,
+                email: email,
+                rnp: rnp,
                 birthday: updated_birthday,
                 gender: updated_gender,
             })
-            .then(() => { });
-        res.redirect(`/profile/${user.id}`);
+            res.redirect(`/profile/${user.id}`);
+        }
+        catch(err) {
+            process.stderr.write(`ERROR: ${err}`)
+        }
     },
 
-    deleteUser: (req, res) => {
+    deleteUser: async (req, res) => {
         const user = req.user;
         //TODO: deletar cartões, endereços associados com o usuário
-        user.destroy().then(() => {
-            //req.
-        });
+        await user.destroy();
         req.logout(() => res.redirect("/login?loggedout"));
     },
 
@@ -112,32 +78,3 @@ export default {
     },
 };
 
-function genderToAcronym(str) {
-    let genderAcronym = "";
-    switch (str) {
-        case "prefiro não informar":
-            genderAcronym = "NA";
-            break;
-        case "não-binário":
-            genderAcronym = "NB";
-            break;
-        case "feminino":
-            genderAcronym = "FM";
-            break;
-        case "masculino":
-            genderAcronym = "ML";
-            break;
-        default:
-            genderAcronym = "NA";
-    }
-    return genderAcronym;
-}
-
-const parseDate = (str) => {
-    if (str !== undefined) {
-        var m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-        return m ? new Date(m[3], m[2] - 1, m[1]) : Date.now();
-    } else {
-        return Date.now();
-    }
-};

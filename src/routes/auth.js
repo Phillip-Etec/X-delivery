@@ -1,5 +1,6 @@
 import express from 'express';
 import authController from '../controllers/auth.js';
+import authPolicies from '../policies/auth.js';
 
 const router = express.Router();
 
@@ -20,6 +21,9 @@ router.get(
 
 router.post(
     '/register',
+    [
+        authPolicies.registerUserValidation
+    ],
     authController.registerUser
 );
 

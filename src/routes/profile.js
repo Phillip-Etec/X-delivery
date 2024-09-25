@@ -1,8 +1,9 @@
 import express from 'express';
 import profileController from '../controllers/profile.js';
+import profilePolicies from '../policies/profile.js';
 import auth from '../auth.js';
 
-const { protectRoute, idParamsRoute } = auth;
+const { protectRoute, idParamsRoute: userIdParamsRoute } = auth;
 
 const router = express.Router();
 
@@ -16,25 +17,36 @@ router.get(
 
 router.get(
     '/profile/:userId',
-    idParamsRoute,
+    [ 
+        userIdParamsRoute,
+        profilePolicies.profileViewValidation,
+    ],
     profileController.profileView
 );
 
 router.delete(
     '/profile/:userId/delete',
-    idParamsRoute,
+    [ 
+        userIdParamsRoute, 
+    ],
     profileController.deleteUser
 );
 
 router.post(
     '/profile/:userId/password',
-    idParamsRoute,
+    [
+        userIdParamsRoute,
+        profilePolicies.updateUserPasswordValidation,
+    ],
     profileController.updateUserPassword
 );
 
 router.post(
     '/profile/:userId',
-    idParamsRoute,
+    [
+        userIdParamsRoute,
+        profilePolicies.updateUserProfileValidation,
+    ],
     profileController.updateUserProfile
 );
 

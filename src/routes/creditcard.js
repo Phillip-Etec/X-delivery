@@ -1,5 +1,6 @@
 import express from 'express';
-import creditCardController from '../controllers/creditcard.js';
+import controller from '../controllers/creditcard.js';
+import policies from '../policies/creditcard.js';
 import auth from '../auth.js';
 
 const { protectRoute, idParamsRoute } = auth;
@@ -8,38 +9,53 @@ const router = express.Router();
 
 router.get(
     '/plasticmoney',
-    protectRoute,
-    creditCardController.redirectToCreditCardView
+    [
+        protectRoute,
+    ],
+    controller.redirectToCreditCardView
 );
 
 router.get(
     '/plasticmoney/:userId',
-    idParamsRoute,
-    creditCardController.creditCardView
+    [
+        idParamsRoute,
+    ],
+    controller.creditCardView
 );
 
 router.get(
     '/plasticmoney/:userId/add',
-    idParamsRoute,
-    creditCardController.creditCardFormView
+    [
+        idParamsRoute,
+    ],
+    controller.creditCardFormView
 );
 
 router.delete(
     '/plasticmoney/:userId/delete',
-    idParamsRoute,
-    creditCardController.deleteCreditCard
+    [
+        idParamsRoute,
+        policies.deleteCreditCardValidation,
+    ],
+    controller.deleteCreditCard
 );
 
 router.post(
     '/plasticmoney/:userId/edit',
-    idParamsRoute,
-    creditCardController.updateCreditCard
+    [
+        idParamsRoute,
+        policies.updateCreditCardValidation,
+    ],
+    controller.updateCreditCard
 );
 
 router.post(
     '/plasticmoney/:userId/add',
-    idParamsRoute,
-    creditCardController.addCreditCard
+    [
+        idParamsRoute,
+        policies.addCreditCardValidation,
+    ],
+    controller.addCreditCard
 );
 
 export default router;

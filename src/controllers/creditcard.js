@@ -1,5 +1,6 @@
 //import bcrypt from 'bcrypt';
 import { encrypt, decrypt } from '../helpers/encryption.js';
+import { parseDate } from '../helpers/common.js';
 import CreditCard from '../models/CreditCard.js';
 // import User from '../models/User.js';
 
@@ -10,24 +11,29 @@ export default {
         const empty = [];
         let no_cards_found = false;
         let cards_array = [];
-        await CreditCard.findAndCountAll({
-            where: { user_id: user.id },
-        }).then(
-            (results) => {
-                cards_array = Array.from(results.rows);
+        try {
+            await CreditCard.findAndCountAll({
+                where: { user_id: user.id },
+            }).then(
+                (results) => {
+                    cards_array = Array.from(results.rows);
+                }
+            );
+            for (let i = 0; i < cards_array.length; i++) {
+                cards_array[i].number = decrypt(cards_array[i].number);
+                cards_array[i].cvv = decrypt(cards_array[i].cvv);
             }
-        );
-        for (let i = 0; i < cards_array.length; i++) {
-            cards_array[i].number = decrypt(cards_array[i].number);
-            cards_array[i].cvv = decrypt(cards_array[i].cvv);
+            if (no_cards_found)
+                cards_array = empty;
+            res.render('creditcardadd', {
+                noplasticmoney: no_cards_found,
+                responseArray: cards_array,
+                id: req.user.id,
+            });
         }
-        if (no_cards_found)
-            cards_array = empty;
-        res.render('creditcardadd', {
-            noplasticmoney: no_cards_found,
-            responseArray: cards_array,
-            id: req.user.id,
-        });
+        catch(err) {
+            process.stderr.write(`ERROR: ${err}`);
+        }
     },
 
     creditCardFormView: (req, res) => {
@@ -149,14 +155,3 @@ export default {
     },
 
 };
-
-/*
- * Parses a string in the format "dd/mm/YYYY" into a Date object.
- * Will default to current date if str's format is invalid
- * @param {string} str: string to be validated and converted into a date object
- * @returns {Date} Date parsed from string
- */
-function parseDate(str) {
-    var m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    return (m) ? new Date(m[3], m[2] - 1, m[1]) : Date.now();
-}
