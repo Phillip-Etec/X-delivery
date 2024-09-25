@@ -1,4 +1,7 @@
 
+ /*
+  * Takes a string in the format 'YYYY-mm-DD' and rearranges it into 'dd/mm/YYYY'
+  * */
 export function dateStringRearrange(str) {
     let reversed = []
     const inorder = str.split('-')
