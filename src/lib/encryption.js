@@ -1,9 +1,7 @@
 import crypto from 'crypto';
-// import { secret_key, secret_iv, encryption_method } from '../config.js'
+import config from '../config.js'
 
-const secret_key = 'byz9VFNtbRQM0yBODcCb1lrUtVVH3D3x'
-const secret_iv = 'X05IGQ5qdBnIqAWD'
-const encryption_method = 'aes-256-cbc'
+const { secret_key, secret_iv, encryption_method } = config;
 
 if (!secret_key || !secret_iv || !encryption_method) {
     throw new Error('secretKey, secretIV, and encryptionMethod are required')
