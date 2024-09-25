@@ -1,5 +1,5 @@
 //import bcrypt from 'bcrypt';
-import { encrypt, decrypt } from '../functions/encryption.js';
+import { encrypt, decrypt } from '../helpers/encryption.js';
 import CreditCard from '../models/CreditCard.js';
 // import User from '../models/User.js';
 
@@ -46,12 +46,13 @@ export default {
         if (!name || !issuer || !number || !expiry || !cvv || !modality) {
             return res.json({ success: false, error: 'por favor, preencha todos os campos necessários' });
         }
-        if (typeof name     !== string ||
-            typeof issuer   !== string ||
-            typeof number   !== string ||
-            typeof expiry   !== string ||
-            typeof cvv      !== string ||
-            typeof modality !== string) {
+        if (typeof name     !== 'string' ||
+            typeof issuer   !== 'string' ||
+            typeof number   !== 'string' ||
+            typeof expiry   !== 'string' ||
+            typeof cvv      !== 'string' ||
+            typeof modality !== 'string'
+            ) {
             res.json({ success: false, error: 'por favor, preencha todos os campos necessários' });
             throw new TypeError('One of the values sent by the client is of the wrong type');
         }

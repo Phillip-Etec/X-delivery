@@ -4,7 +4,6 @@ import User from "../models/User.js";
 export default {
     profileView: (req, res) => {
         // don't foget to check if user is authenticated first
-        //console.log( req );
         if (!req.isAuthenticated()) {
             res.redirect("/login?profilerequest");
         }
@@ -28,9 +27,6 @@ export default {
                 break;
         }
         const date = req.user.birthday.toString();
-        //console.log(`===================================================`);
-        //console.log(`user: ${req.user.birthday}`);
-        //console.log(`===================================================`);
         res.render("profile", {
             name: req.user.name,
             email: req.user.email,
@@ -50,8 +46,6 @@ export default {
     },
 
     updateUserProfile: async (req, res) => {
-        //console.log(req.body);
-        //console.log("================ hit  ========");
         const user = req.user;
         const { name, email, rnp, birthday, gender } = req.body;
         let updated_gender,
@@ -83,18 +77,11 @@ export default {
     },
 
     deleteUser: (req, res) => {
-        //console.log("================ delete  ========");
-        if (!req.isAuthenticated()) {
-            //console.log('não estou autenticado');
-        }
-        //// está autenticado
-        else {
-            const user = req.user;
-            //TODO: deletar cartões, endereços associados com o usuário
-            user.destroy().then(() => {
-                //req.
-            });
-        }
+        const user = req.user;
+        //TODO: deletar cartões, endereços associados com o usuário
+        user.destroy().then(() => {
+            //req.
+        });
         req.logout(() => res.redirect("/login?loggedout"));
     },
 

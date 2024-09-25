@@ -17,13 +17,14 @@ import logger from 'morgan';
 import config from './config.js'
 
 // middlewares
-import { rateLimit } from "./lib/limiter.js";
+import { rateLimit } from "./helpers/limiter.js";
 
 // routes 
 import authRoutes from './routes/auth.js';
 import dashboardRoutes from './routes/dashboard.js';
 import profileRoutes from './routes/profile.js';
 import creditCardRoutes from './routes/creditcard.js';
+import rootRoute from './routes/root.js';
 
 //import errorHandler from './error-handler';
 import db from './db/database.js';
@@ -67,10 +68,10 @@ app.use(
     rateLimit({
         interval: 60 * 1000,
     })
-)
+);
 
 app.set('view engine', 'pug');
-app.set('views', path.resolve(__dirname, './views'))
+app.set('views', path.resolve(__dirname, './views'));
 
 auth.init();
 app.use(session({
@@ -83,10 +84,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', authRoutes);
-app.use('/', dashboardRoutes);
-app.use('/', profileRoutes);
-app.use('/', creditCardRoutes);
+app.use('/', rootRoute);
 
 if (ENV !== 'development' && ENV !== 'test') {
     // catch 404 and forward to error handler

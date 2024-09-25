@@ -6,6 +6,10 @@ const { protectRoute } = auth;
 
 const router = express.Router();
 
-router.get('/',  dashboardController.dashboardView);
+router.get(
+    '/',
+    dashboardController.dashboardView
+);
+
 
 export default router;

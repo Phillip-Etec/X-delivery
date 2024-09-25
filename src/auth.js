@@ -59,23 +59,19 @@ export default {
     },
 
     idParamsRoute: (req, res, next) => {
-        //console.log(req.params);
-        //console.log(req.user.dataValues.id);
         if (req.isAuthenticated() && req.params.userId == req.user.dataValues.id) {
             return next();
         }
         res.redirect('/');
     },
 
-    /*
-     *adminRoute: (req, res, next) => {
-     *    if(req.isAuthenticated() ) {
-     *        const user = req.user;
-     *        isAdmin = await User.findOne( { where: {user.email} } ).isAdmin;
-     *        return next();
-     *    }
-     *    res.redirect('/login?next=' + req.url);
-     *},
-     */
+    
+    adminRoute: (req, res, next) => {
+       if (req.isAuthenticated() && req.user.dataValues.isAdmin) {
+           return next();
+       }
+       res.redirect('/');
+    },
+    
 
 };
