@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import { parseDate, genderToAcronym, dateStringRearrange } from '../helpers/common.js';
 
 export default {
+
     profileView: (req, res) => {
         // parse User info and pass as arguments
         const user_gender = genderToAcronym(req.user.gender)
@@ -26,7 +27,6 @@ export default {
         const { name, email, rnp, birthday, gender } = req.body;
         let updated_gender,
             updated_birthday = "";
-        
         updated_gender = genderToAcronym(gender);
         updated_birthday = parseDate(birthday);
         try {
@@ -40,41 +40,36 @@ export default {
             res.redirect(`/profile/${user.id}`);
         }
         catch(err) {
-            process.stderr.write(`ERROR: ${err}`)
+            process.stderr.write(`ERROR: ${err}`);
         }
     },
 
     deleteUser: async (req, res) => {
         const user = req.user;
-        //TODO: deletar cartões, endereços associados com o usuário
-        await user.destroy();
-        req.logout(() => res.redirect("/login?loggedout"));
+        //TODO: delete credit cards and 
+        // addresses associated with the user
+        try {
+            await user.destroy();
+            req.logout(() => res.redirect("/login?loggedout"));
+        }
+        catch(err) {
+            process.stderr.write(`ERROR: ${err}`);
+        }
     },
 
     updateUserPassword: async (req, res) => {
         const user = req.user;
         //console.log(req.body);
         const { password, newPassword, renewPassword } = req.body;
-        // checar se todos os campos foram preenchidos
-        if (!password || !newPassword || !renewPassword) {
-            return res.render(`profile`, {
-                passwordError: "Por favor, preencha todos os campos necessários",
+        try {
+            user.update({
+                password: bcrypt.hashSync(newPassword, 8),
             });
+            req.logout(() => res.redirect("/login?loggedout"));
         }
-        // checar se a senha enviada é correta
-        if (!bcrypt.compareSync(password, user.password)) {
-            return res.render(`profile`, { passwordError: "Senha incorreta" });
+        catch(err) {
+            process.stderr.write(`Error: ${err}`);
         }
-        // checar se a nova senha é a mesma à atual
-        if (bcrypt.compareSync(newPassword, user.password)) {
-            return res.render(`profile`, {
-                passwordError: "Senha nova não pode ser a igual à senha atual",
-            });
-        }
-        user.update({
-            password: bcrypt.hashSync(newPassword, 8),
-        });
-        req.logout(() => res.redirect("/login?loggedout"));
     },
-};
 
+};

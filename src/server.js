@@ -127,7 +127,7 @@ if (ENV !== 'development' && ENV !== 'test') {
     });
 }
 
-db.sync({ force: reloadDB })
+db.sync({ force: ENV === 'production'? false : reloadDB })
     .then(() => {
         app.listen(PORT, process.stdout.write('Server is running on port: ' + PORT + '\n'));
     });
