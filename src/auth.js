@@ -30,25 +30,6 @@ export default {
             done(null, user);
         });
 
-
-        /*
-         *passport.use(
-         *    new LocalStrategy( { usernameField: 'isAdmin' }, 
-         *        async (email, password, done) => {
-         *        const user = await User.findOne({where: { email }});
-         *            if(!user) { 
-         *                return done( null, false );
-         *            }
-         *            if(!user.isAdmin) { 
-         *                return done( null, false );
-         *            }
-         *            if(!bcrypt.compareSync(password, user.password)) { 
-         *                return done( null, false ); 
-         *            }
-         *            return done( null, user );
-         *        } )
-         *);
-         */
     },
 
     protectRoute: (req, res, next) => {
@@ -65,13 +46,11 @@ export default {
         res.redirect('/');
     },
 
-    
     adminRoute: (req, res, next) => {
        if (req.isAuthenticated() && req.user.dataValues.isAdmin) {
            return next();
        }
        res.redirect('/');
     },
-    
 
 };

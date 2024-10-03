@@ -1,14 +1,14 @@
 {
   "name": "x-delivery",
   "version": "0.2.1",
-  "description": "mock de ecommerce",
+  "description": "ecommerce de queijo",
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "test": "npm ../test/bateria.js",
+    "test": "npm /test/index.js",
     "start": "node server.js",
     "watch": "nodemon server.js --ext 'js,pug'",
-    "pug": "pug views/creditcardadd.pug"
+    "pug": "pug"
   },
   "keywords": [
     "ecommerce"
@@ -42,6 +42,7 @@
     "@types/passport": "^1.0.16",
     "@types/sequelize": "^4.28.20",
     "connect-livereload": "^0.6.1",
-    "livereload": "^0.9.3"
+    "livereload": "^0.9.3",
+    "svpug": "^0.1.4"
   }
 }

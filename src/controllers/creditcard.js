@@ -1,7 +1,10 @@
 //import bcrypt from 'bcrypt';
+import assert from 'assert';
 import { encrypt, decrypt } from '../helpers/encryption.js';
 import { parseDate } from '../helpers/common.js';
 import CreditCard from '../models/CreditCard.js';
+import { strategySendJsonSuccess, serverError } from '../helpers/validation.js';
+import { removeNullUndefinedEmptyKeys, areAllKeysNullOrUndefined } from '../helpers/common.js';
 // import User from '../models/User.js';
 
 export default {
@@ -31,127 +34,78 @@ export default {
                 id: req.user.id,
             });
         }
-        catch(err) {
-            process.stderr.write(`ERROR: ${err}`);
+        catch (err) {
+            console.error(`ERROR: ${err}\nON: ${err.stack}`);
+            return serverError(res);
         }
     },
 
     creditCardFormView: (req, res) => {
-        //TODO
-        res.render('cardform');
+        //TODO: sent title to view
+        const { name, id } = req.user;
+        const title = `Cartões de ${name}`;
+        res.render('cardform', { title, id });
     },
 
     redirectToCreditCardView: (req, res) => {
         const id = req.user.id;
-        res.redirect(`plasticmoney/${id}`)
+        res.redirect(`plasticmoney/${id}`);
     },
 
     addCreditCard: async (req, res) => {
-        const { name, issuer, number, expiry, cvv, modality } = req.body;
-        // checking/sanitizing
-        if (!name || !issuer || !number || !expiry || !cvv || !modality) {
-            return res.json({ success: false, error: 'por favor, preencha todos os campos necessários' });
-        }
-        if (typeof name     !== 'string' ||
-            typeof issuer   !== 'string' ||
-            typeof number   !== 'string' ||
-            typeof expiry   !== 'string' ||
-            typeof cvv      !== 'string' ||
-            typeof modality !== 'string'
-            ) {
-            res.json({ success: false, error: 'por favor, preencha todos os campos necessários' });
-            throw new TypeError('One of the values sent by the client is of the wrong type');
-        }
-        // bussiness logic
-        if (await CreditCard.findOne({ where: { number: number } })) {
-            return res.json({ success: false, error: 'um cartão com este número já está cadastrado' });
-        }
         //TODO: find issuer and modality id before inserting;
+        const rec = res.locals.received;
+        assert.equal(areAllKeysNullOrUndefined(rec), false);
+        const props = removeNullUndefinedEmptyKeys({
+            name: rec.name,
+            issuer: rec.issuer,
+            number: encrypt(rec.number),
+            expiry: parseDate(rec.expiry),
+            cvv: encrypt(rec.cvv),
+            modality: rec.modality
+        });
         await CreditCard.create({
-            name: name,
-            issuer: issuer,
-            number: encrypt(number),
-            expiry: parseDate(expiry),
-            cvv: encrypt(cvv),
-            modality: modality,
+            ...props,
             user_id: req.user.id,
         });
-        res.json({ success: true });
+        //TODO: send alert and redirect to all creditcards view
+        res.redirect(`/plasticmoney`);
     },
 
-    updateCreditCard: async (req, res) => {
-        const { name, issuer, number, expiry, cvv, modality, new_number } = req.body;
-        let cardFound = false;
-        let creditCard, cards;
-        if (!name || !issuer || !number || !expiry || !cvv || !modality || !new_number) {
-            return res.render(`/placeholder/url/`, { error: 'por favor, preencha todos os campos necessários' });
-        }
-        await CreditCard.findAll({
-            where: { user_id: req.user.id }
-        }).then(
-            (results) => {
-                cards = Array.from(results);
-            }
-        );
-
-        if (!cards) {
-            return res.redirect(`/plasticmoney`, { error: 'Você não tem nenhum cartão registrado' });
-        }
-        for (let i = 0; i < cards.length; i++) {
-            if (decrypt(cards[i].number) == number) {
-                cardFound = true;
-                creditCard = cards[i];
-                break;
-            }
-        }
-
-        if (!cardFound) {
-            return res.redirect('/plasticmoney', { error: 'Você não tem nenhum cartão registrado com este número' });
-        }
-
-        creditCard.update({
-            name: name,
-            issuer: issuer,
-            number: encrypt(new_number),
-            expiry: parseDate(expiry),
-            cvv: encrypt(cvv),
-            modality: modality,
-            user_id: req.user.id,
+    updateCreditCard: async (_, res) => {
+        const rec = res.received;
+        const creditCard = res.locals.creditCard;
+        const props = removeNullUndefinedEmptyKeys({
+            name: rec.name ?? '',
+            issuer: rec.issuer ?? '',
+            number: rec.new_number ? encrypt(rec.new_number) : '',
+            expiry: rec.expiry ? parseDate(expiry) : '',
+            cvv: rec.cvv ? encrypt(cvv) : '',
+            modality: rec.modality ?? '',
         });
-        return res.redirect('');
+        try {
+            await creditCard.update({
+                ...props,
+            });
+            return res.redirect(`/plasticmoney`);
+        }
+        catch (err) {
+            console.error(`ERROR: ${err}\nON: ${err.stack}`);
+        }
     },
 
-    deleteCreditCard: async (req, res) => {
-        const { number } = req.body;
-        if (!number) {
-            return res.json({ error: 'Número do cartão não fornecido' });
-        }
-        let creditCard;
-        let cardFound = false;
-        let cards = [];
-        await CreditCard.findAll({
-            where: { user_id: req.user.id }
-        }).then((results) => {
-            cards = Array.from(results);
-        });
-        if (!cards) {
-            return res.json({ error: 'Você não tem nenhum cartão registrado' });
-        }
-        for (let i = 0; i < cards.length; i++) {
-            if (decrypt(cards[i].number) === number) {
-                cardFound = true;
-                creditCard = cards[i];
-                break;
-            }
-        }
-        //
-        if (!cardFound) {
-            return res.json({ error: 'Você não tem nenhum cartão registrado com este número' });
-        }
-        else {
+    deleteCreditCard: async (_, res) => {
+        const creditCard = res.locals.creditCard;
+        try {
             await creditCard.destroy();
+            strategySendJsonSuccess(res,
+                'Cartão cadastrado com sucesso',
+                'Sucesso'
+            );
         }
-        return res.json({ success: true });
+        catch (err) {
+            console.error(`ERROR: ${err}\nON: ${err.stack}`);
+        }
     },
 
 };

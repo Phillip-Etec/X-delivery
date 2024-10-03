@@ -1,0 +1,20 @@
+extends ../scaffold/layout.pug
+
+block nav
+  .blank
+
+block content
+  main.uk-section
+    .uk-container.uk-container-small.uk-align-center
+      .uk-card.uk-card-body.uk-card-default(class='uk-width-1-1@l')
+          h3.uk-card-title Login
+          .uk-margin
+            form(method='post' action='/login')
+              fieldset.uk-fieldset
+                .uk-margin
+                  input.uk-input(type='text' name='email' placeholder='e-mail' aria-label='e-mail' autocomplete='on')
+                .uk-margin
+                  input.uk-input(type='password' name='password' placeholder='senha' aria-label='senha')
+              .uk-flex.uk-flex-center.uk-column-1-2
+                button.uk-button.uk-button-primary(type='submit') login
+                a.uk-link(href='/register').ps-2 Registrar

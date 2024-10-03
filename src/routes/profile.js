@@ -1,53 +1,55 @@
 import express from 'express';
-import profileController from '../controllers/profile.js';
-import profilePolicies from '../policies/profile.js';
+import controller from '../controllers/profile.js';
+import policies from '../policies/profile.js';
 import auth from '../auth.js';
 
 const { protectRoute, idParamsRoute: userIdParamsRoute } = auth;
 
 const router = express.Router();
 
+const root = '/profile';
+
 router.get(
-    '/profile',
+    `${root}`,
     [
         protectRoute,
     ],
-    profileController.redirectToProfileView
+    controller.redirectToProfileView
 );
 
 router.get(
-    '/profile/:userId',
-    [ 
+    `${root}/:userId`,
+    [
         userIdParamsRoute,
-        profilePolicies.profileViewValidation,
+        policies.profileViewValidation,
     ],
-    profileController.profileView
+    controller.profileView
 );
 
 router.delete(
-    '/profile/:userId/delete',
-    [ 
-        userIdParamsRoute, 
+    `${root}/:userId/delete`,
+    [
+        userIdParamsRoute,
     ],
-    profileController.deleteUser
+    controller.deleteUser
 );
 
 router.post(
-    '/profile/:userId/password',
+    `${root}/:userId/password`,
     [
         userIdParamsRoute,
-        profilePolicies.updateUserPasswordValidation,
+        policies.updateUserPasswordValidation,
     ],
-    profileController.updateUserPassword
+    controller.updateUserPassword
 );
 
 router.post(
-    '/profile/:userId',
+    `${root}/:userId`,
     [
         userIdParamsRoute,
-        profilePolicies.updateUserProfileValidation,
+        policies.updateUserProfileValidation,
     ],
-    profileController.updateUserProfile
+    controller.updateUserProfile
 );
 
 export default router;

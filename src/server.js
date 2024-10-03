@@ -20,13 +20,8 @@ import config from './config.js'
 import { rateLimit } from "./helpers/limiter.js";
 
 // routes 
-import authRoutes from './routes/auth.js';
-import dashboardRoutes from './routes/dashboard.js';
-import profileRoutes from './routes/profile.js';
-import creditCardRoutes from './routes/creditcard.js';
-import rootRoute from './routes/root.js';
+import allRoutes from './routes/root.js';
 
-//import errorHandler from './error-handler';
 import db from './db/database.js';
 import auth from './auth.js';
 
@@ -45,17 +40,20 @@ liveReloadServer.server.once('connection', () => {
     }, 100);
 });
 
-const app = express();
-const PORT = config.port ?? '9516';
+const PORT = config.port ?? '3000';
 const ENV = config.env ?? 'production';
 
+const app = express();
+
 app.use(connectLiveReload());
-// app.use( errorHandler );
+
 app.disable('x-powered-by');
+app.disable('strict routing');
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(logger((ENV === "development") ? 'dev' : 'common'));
+app.use(logger((ENV !== "development") ? 'tiny' : 'dev'));
 
 app.use(
     express.static(path.join(__dirname, "public"), {
@@ -84,7 +82,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', rootRoute);
+app.use('/', allRoutes);
 
 if (ENV !== 'development' && ENV !== 'test') {
     // catch 404 and forward to error handler
@@ -127,7 +125,7 @@ if (ENV !== 'development' && ENV !== 'test') {
     });
 }
 
-db.sync({ force: ENV === 'production'? false : reloadDB })
+db.sync({ force: ENV === 'production' ? false : reloadDB })
     .then(() => {
         app.listen(PORT, process.stdout.write('Server is running on port: ' + PORT + '\n'));
     });

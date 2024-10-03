@@ -36,6 +36,7 @@ router.delete(
     [
         idParamsRoute,
         policies.deleteCreditCardValidation,
+        policies.noCardRegistered,
     ],
     controller.deleteCreditCard
 );
@@ -45,6 +46,7 @@ router.post(
     [
         idParamsRoute,
         policies.updateCreditCardValidation,
+        policies.noCardRegistered,
     ],
     controller.updateCreditCard
 );
@@ -54,6 +56,7 @@ router.post(
     [
         idParamsRoute,
         policies.addCreditCardValidation,
+        policies.cardAlreadyRegistered,
     ],
     controller.addCreditCard
 );

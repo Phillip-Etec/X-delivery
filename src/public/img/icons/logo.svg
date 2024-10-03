@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-cheese">
+	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+	<path d="M5.66 19.18l16.481-.008v-3.6a2 2 0 1 1 0-4v-3.6h-18.351002" />
+	<path d="M22.139999 7.95l-16.440001-2.25c-1.809999 1.24-2.739998 2.7-2.779999 5.3" />
+	<path d="M16.4 11.53v.01" />
+	<path d="M10.61 11.759999v.01" />
+	<path d="M14.049999 14.889999v.01" />
+	<path d="M4.24 17 7.51 17" />
+	<path d="M2.3 15 7.51 15" />
+	<path d="M.93 13 7.51 13" />
+</svg>

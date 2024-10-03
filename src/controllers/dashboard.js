@@ -1,12 +1,12 @@
 export default {
     dashboardView: (req, res) => {
         if(req.isAuthenticated ()) {
-            res.render( 'dashboard', { 
+            res.render( 'index', { 
                 name: req.user.name 
             } );
         }
         else {
-            res.render( 'dashboard');
+            res.render( 'index');
         }
     }
 }

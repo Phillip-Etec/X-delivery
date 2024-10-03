@@ -1,35 +1,35 @@
 import express from 'express';
-import authController from '../controllers/auth.js';
-import authPolicies from '../policies/auth.js';
+import controller from '../controllers/auth.js';
+import policies from '../policies/auth.js';
 
 const router = express.Router();
 
 router.get(
     '/register',
-    authController.registerView
+    controller.registerView
 );
 
 router.get(
     '/login',
-    authController.loginView
+    controller.loginView
 );
 
 router.get(
     '/logout',
-    authController.logoutUser
+    controller.logoutUser
 );
 
 router.post(
     '/register',
     [
-        authPolicies.registerUserValidation
+        policies.registerUserValidation
     ],
-    authController.registerUser
+    controller.registerUser
 );
 
 router.post(
     '/login',
-    authController.loginUser
+    controller.loginUser
 );
 
 export default router;

@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import { parseDate, genderToAcronym, dateStringRearrange } from '../helpers/common.js';
+import assert from 'assert';
 
 export default {
 
@@ -39,8 +40,8 @@ export default {
             })
             res.redirect(`/profile/${user.id}`);
         }
-        catch(err) {
-            process.stderr.write(`ERROR: ${err}`);
+        catch (err) {
+            console.error(`ERROR: ${err}\nON: ${err.stack}`);
         }
     },
 
@@ -52,23 +53,23 @@ export default {
             await user.destroy();
             req.logout(() => res.redirect("/login?loggedout"));
         }
-        catch(err) {
-            process.stderr.write(`ERROR: ${err}`);
+        catch (err) {
+            console.error(`ERROR: ${err}\nON: ${err.stack}`);
         }
     },
 
     updateUserPassword: async (req, res) => {
         const user = req.user;
         //console.log(req.body);
-        const { password, newPassword, renewPassword } = req.body;
+        const { newPassword } = req.body;
         try {
             user.update({
                 password: bcrypt.hashSync(newPassword, 8),
             });
             req.logout(() => res.redirect("/login?loggedout"));
         }
-        catch(err) {
-            process.stderr.write(`Error: ${err}`);
+        catch (err) {
+            console.error(`ERROR: ${err}\nON: ${err.stack}`);
         }
     },
 
