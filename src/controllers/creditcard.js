@@ -14,18 +14,18 @@ export default {
         const empty = [];
         let no_cards_found = false;
         let cards_array = [];
-        try {
-            await CreditCard.findAndCountAll({
-                where: { user_id: user.id },
-            }).then(
-                (results) => {
-                    cards_array = Array.from(results.rows);
-                }
-            );
-            for (let i = 0; i < cards_array.length; i++) {
-                cards_array[i].number = decrypt(cards_array[i].number);
-                cards_array[i].cvv = decrypt(cards_array[i].cvv);
-            }
+            try {
+                await CreditCard.findAndCountAll({
+                    where: { user_id: user.id },
+                }).then(
+                    (results) => {
+                        cards_array = Array.from(results.rows);
+                        cards_array = cards_array.map((card) => ({
+                            ...card,
+                            number: decrypt(card.number),
+                            cvv: decrypt(card.cvv),
+                        }));
+                    }
             if (no_cards_found)
                 cards_array = empty;
             res.render('creditcardadd', {
