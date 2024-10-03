@@ -56,12 +56,12 @@ export default {
         }).then((results) => {
             cards = Array.from(results);
         });
-        if (!cards) {
+        if (cards.length === 0) {
             strategySendJsonError(res,
                 'Você não tem nenhum cartão registrado',
                 'Erro'
             );
-        const cardFound = hasCreditCard(cards, number);
+        const cardFound = cards.some((card) => decrypt(card.number) === number);
         if (!cardFound) {
             return strategySendJsonSuccess(res,
                 'Você não tem nenhum cartão registrado com este número',

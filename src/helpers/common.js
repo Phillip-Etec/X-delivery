@@ -100,14 +100,7 @@ export function compose(...fns) {
 /*
  * 
  */
-export function hasCreditCard(cards, number) {
-+   return cards.some((card) => decrypt(card.number) === number);
-+}
-+
-+/*
-+ * 
-+ */
-+export function areAllKeysNullOrUndefined(obj) {
+export function areAllKeysNullOrUndefined(obj) {
     return Object.keys(obj).every(key =>
         obj[key] === null || obj[key] === undefined
     );

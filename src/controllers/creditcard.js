@@ -10,22 +10,28 @@ import { removeNullUndefinedEmptyKeys, areAllKeysNullOrUndefined } from '../help
 export default {
 
     creditCardView: async (req, res) => {
+        //interface cardResObj {
+            //name: string,
+            //issuer: string,
+            //number: string,
+            //expiry: string,
+            //cvv: string,
+            //modality: string
+        //};
         const user = req.user;
         const empty = [];
         let no_cards_found = false;
         let cards_array = [];
-            try {
-                await CreditCard.findAndCountAll({
-                    where: { user_id: user.id },
-                }).then(
-                    (results) => {
-                        cards_array = Array.from(results.rows);
-                        cards_array = cards_array.map((card) => ({
-                            ...card,
-                            number: decrypt(card.number),
-                            cvv: decrypt(card.cvv),
-                        }));
-                    }
+        try {
+            await CreditCard.findAndCountAll({
+                where: { user_id: user.id },
+            }).then( (results) => {
+                cards_array = results.rows.map((card) => ({
+                    ...card,
+                    number: decrypt(card.number),
+                    cvv: decrypt(card.cvv),
+                }));
+            };
             res.render('creditcardadd', {
                 noplasticmoney: no_cards_found,
                 responseArray: cards_array,
