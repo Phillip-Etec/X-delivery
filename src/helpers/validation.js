@@ -1,7 +1,8 @@
-import {    removeNullUndefinedEmptyKeys, 
-            except, 
-            hasAllKeys,
-            hasAtLeastOneKey
+import {
+    removeNullUndefinedEmptyKeys,
+    except,
+    hasAllKeys,
+    hasAtLeastOneKey
 } from './common.js'
 
 Array.prototype.except = function(to_exclude) {
@@ -16,11 +17,11 @@ export function
     ) {
     const received = removeNullUndefinedEmptyKeys(req.body);
     const optional = allKeys.except(requiredKeys);
-    if (!hasAllKeys(requiredKeys, received) {
+    if (!hasAllKeys(requiredKeys, received)) {
         return processError(errorStrategy, res, message, title);
     }
-    if (!hasAtLeastOneKey(optional, received) ) {
-        return processError(errorStrategy, res, 
+    if (!hasAtLeastOneKey(optional, received)) {
+        return processError(errorStrategy, res,
             'No mínimo um dos campos opicionais tem que ser preenchidos',
             'Preencha no mínimo um campo a mais'
         );
