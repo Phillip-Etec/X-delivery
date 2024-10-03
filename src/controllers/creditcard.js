@@ -26,8 +26,6 @@ export default {
                             cvv: decrypt(card.cvv),
                         }));
                     }
-            if (no_cards_found)
-                cards_array = empty;
             res.render('creditcardadd', {
                 noplasticmoney: no_cards_found,
                 responseArray: cards_array,
