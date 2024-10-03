@@ -61,21 +61,14 @@ export default {
                 'Você não tem nenhum cartão registrado',
                 'Erro'
             );
-        }
-        for (let i = 0; i < cards.length; i++) {
-            if (decrypt(cards[i].number) === number) {
-                cardFound = true;
-                creditCard = cards[i];
-                break;
-            }
-        }
-        //
+        const cardFound = hasCreditCard(cards, number);
         if (!cardFound) {
-            strategySendJsonSuccess(res,
+            return strategySendJsonSuccess(res,
                 'Você não tem nenhum cartão registrado com este número',
                 'Erro'
             );
         }
+        const creditCard = cards.find((card) => decrypt(card.number) === number);
         res.locals.creditCard = creditCard;
         next();
     },
