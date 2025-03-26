@@ -1,0 +1,40 @@
+{
+    "name": "x-delivery",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Projeto de e-commerce para a aula de laboratório de engenharia de software",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "concurrently \"npm:dev*\"",
+        "dev:app": "npm run dev -w @X-delivery/app",
+        "dev:server": "npm run serve -w @X-delivery/api"
+    },
+    "dependencies": {
+        "concurrently": "*",
+        "dotenv": "^16.4.7",
+        "eslint": "^7.11.0",
+        "webpack": "^5.98.0"
+    },
+    "workspaces": [
+        "api/",
+        "client/",
+        "app/",
+        "lib/",
+        "tests/"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Phillip-Etec/X-delivery.git"
+    },
+    "keywords": [
+        "ecommerce"
+    ],
+    "author": "Phill",
+    "license": "AGLP-3.0",
+    "bugs": {
+        "url": "https://github.com/Phillip-Etec/X-delivery/issues"
+    },
+    "homepage": "https://github.com/Phillip-Etec/X-delivery#readme"
+}

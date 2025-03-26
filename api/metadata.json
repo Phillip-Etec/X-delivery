@@ -1,0 +1,32 @@
+{
+    "creditcardIssuers": [
+        {
+            "id": 1,
+            "name": "Visa"
+        },
+        {
+            "id": 2,
+            "name": "Mastercard"
+        }
+    ],
+    "credicardModalities": [
+        {
+            "id": 1,
+            "name": "Crédito"
+        },
+        {
+            "id": 2,
+            "name": "Débito"
+        }
+    ],
+    "addressTypes": [
+        {
+            "id": 1,
+            "name": "Cobrança"
+        },
+        {
+            "id": 2,
+            "name": "Entrega"
+        }
+    ]
+}

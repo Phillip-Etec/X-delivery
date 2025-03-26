@@ -1,0 +1,71 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Eu",
+      "email": "a@b.c",
+      "password": "123",
+      "ssn": "11122233345",
+      "birthday": "01/01/2000",
+      "isAdmin": true,
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "name": "This shouldn't happen",
+      "email": "b@c.d",
+      "password": "456",
+      "ssn": "22233344455",
+      "birthday": "01/01/2000",
+      "isActive": true,
+      "isAdmin": false
+    },
+    {
+      "name": "It's working as intended",
+      "email": "butnovalidation@ohwait.bootstrap.does.this.in.specifc",
+      "password": "change this field to password",
+      "ssn": "redirect to the addresses route",
+      "birthday": "maskthisfield",
+      "isAdmin": "on",
+      "isActive": null,
+      "id": 3
+    }
+  ],
+  "payments": [
+    {
+      "name": "Douain",
+      "issuer": "Maestro",
+      "number": "1234567890123456",
+      "expiry": "20/03/2029",
+      "cvv": "789",
+      "modality": "Débito",
+      "userId": "2",
+      "id": 1
+    }
+  ],
+  "addresses": [
+    {
+      "id": 1,
+      "name": "Casa",
+      "type": "Entrega",
+      "alias": "Casa",
+      "zip": "0123412",
+      "addon": "Bloco C, apto. 27",
+      "street": "Rua de Ouro 81",
+      "state": "Rio Grande Do Sul",
+      "county": "Bairro dos diamantes",
+      "region": "Sul",
+      "userId": 1
+    }
+  ],
+  "telephones": [
+    {
+      "id": 1,
+      "number": "987654321",
+      "userId": 1
+    }
+  ],
+  "_vim_": {
+    "modeline": "/* vim: set ft=json noet ts=2 sw=2: */"
+  }
+}

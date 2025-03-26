@@ -1,0 +1,15 @@
+{
+    "name": "@X-delivery/api",
+    "version": "0.0.1",
+    "type": "module",
+    "main": "server.js",
+    "license": "GPLv3",
+    "dependencies": {
+        "chalk": "^5.4.1",
+        "dotenv": "^16.4.7",
+        "json-server": "^0.17.4"
+    },
+    "scripts": {
+        "serve": "node server.js"
+    }
+}
