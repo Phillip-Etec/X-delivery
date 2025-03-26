@@ -7,5 +7,5 @@
 | Symbol | Meaning |
 | :----: | :------ |
 | :x: | False, Not, No |
-| :white_check_mark | Yes, True, Done |
+| :white_check_mark: | Yes, True, Done |
 | :curly_loop: | Does Not Apply |
