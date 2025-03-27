@@ -1,5 +1,5 @@
 {
-    "name": "@X-delivery/api",
+    "name": "@X-delivery/mock",
     "version": "0.0.1",
     "type": "module",
     "main": "server.js",

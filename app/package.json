@@ -14,9 +14,11 @@
         "bootstrap": "^5.3.3",
         "bootswatch": "^5.3.3",
         "dotenv": "^16.4.7",
+        "formik": "^2.4.6",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
-        "react-router-dom": "^7.4.0"
+        "react-router-dom": "^7.4.0",
+        "yup": "^1.6.1"
     },
     "devDependencies": {
         "@eslint/js": "^9.21.0",
