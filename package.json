@@ -7,11 +7,14 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "concurrently \"npm:dev*\"",
+        "start": "concurrently \"npm:dev:app\" \"npm:dev:server\"",
+        "mocked": "concurrently \"npm:dev:app\" \"npm:dev:mock\"",
         "dev:app": "npm run dev -w @X-delivery/app",
-        "dev:server": "npm run serve -w @X-delivery/api"
+        "dev:server": "npm run start:dev -w @X-delivery/api",
+        "dev:mock": "npm run serve -w @X-delivery/mock"
     },
     "dependencies": {
+        "@nestjs/cli": "^11.0.5",
         "concurrently": "*",
         "dotenv": "^16.4.7",
         "eslint": "^7.11.0",
@@ -19,9 +22,9 @@
     },
     "workspaces": [
         "api/",
-        "client/",
         "app/",
         "lib/",
+        "mock/",
         "tests/"
     ],
     "repository": {
