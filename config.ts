@@ -18,8 +18,8 @@ interface Config {
 const getConfig = (): ENV => {
    return {
       node_env: process.env.NODE_ENV ? process.env.NODE_ENV : undefined,
-      app_port: process.env.API_PORT ? Number(process.env.APP_PORT) : undefined,
-      api_port: process.env.APP_PORT ? Number(process.env.API_PORT) : undefined
+      app_port: process.env.VITE_API_PORT ? Number(process.env.APP_PORT) : undefined,
+      api_port: process.env.VITE_APP_PORT ? Number(process.env.API_PORT) : undefined,
    }
 }
 
@@ -43,3 +43,4 @@ const config = getConfig()
 const sanitizedConfig = getSanitzedConfig(config)
 
 export default sanitizedConfig
+

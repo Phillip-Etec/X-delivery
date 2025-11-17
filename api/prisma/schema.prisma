@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,24 +12,62 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  name String @unique
+  name String
   email String @unique
   password String
   ssn String @unique
   birthday DateTime
-  gender String 
+  gender Gender @default(RatherNot) 
   isActive Boolean
   isAdmin Boolean
 }
 
-enum Genero {
-  Masculino
-  Feminino
-  Não_Binário
-  Outro
+enum Gender {
+  Masculine  @map("Masculino")
+  Feminine   @map("Feminino")
+  NonBinary  @map("Não Binário")
+  RatherNot  @map("Prefiro não informar")
+  Other      @map("Outro")
+  @@map("_genders")
 }
 
-enum StatusCliente {
-  Ativo
-  Inativo
+model Telephones {
+    id Int @id @default(autoincrement())
+    ddd Int
+    number String
+    type TelephoneType @default(Celular)
+}
+
+enum TelephoneType {
+    Residencial
+    Celular
+    @@map("_tel_types")
+}
+
+model CreditCard {
+    id Int @id @default(autoincrement())
+    number String @unique
+    name String
+    flag CreditCardFlag
+    cvv String
+    isMain Boolean
+}
+
+enum CreditCardFlag {
+    Maestro
+    Visa
+}
+
+model Address {
+    id Int @id @default(autoincrement())
+    type String
+    streetType String
+    street String
+    number Int
+    municipality String
+    zip String
+    city String
+    state String
+    country String
+    observations String 
 }

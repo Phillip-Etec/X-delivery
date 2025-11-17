@@ -100,7 +100,7 @@ export default function Create() {
               password: "",
               passwordConfirmation: '',
               ssn: "",
-              birthday: new Date(1999, 12, 12),
+              birthday: new Date(1899, 12, 31),
               gender: '',
               isAdmin: false,
               isActive: false,
@@ -118,7 +118,7 @@ export default function Create() {
 
               password: Yup.string()
                 .min(8, 'A senha deve conter no mínimo 8 caracteres')
-                .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, 'Deve conter caracteres maiúsculos, mínusculos e especiais')
+                .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/, 'Deve conter números, caracteres maiúsculos, mínusculos, e especiais')
                 .required('Obrigatório'),
 
               passwordConfirmation: Yup.string()

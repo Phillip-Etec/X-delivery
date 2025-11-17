@@ -1,17 +1,16 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Gender } from '@prisma/client';
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
 
 async function main() {
-   // create two dummy recipes
+
    const user1 = await prisma.user.upsert({
-      where: { name: 'Michael Jackson' },
+      where: { email: 'mike@jackson.real' },
       update: {},
       create: {
-         id: 1,
          name: 'Michael Jackson',
-         gender: 'Masculino',
+         gender: 'Masculine',
          birthday: new Date(1962, 12, 3),
          ssn: '123456789011',
          email: 'mike@jackson.real',
@@ -20,7 +19,6 @@ async function main() {
          isAdmin: true
       }
    });
-
 
    console.log({ user1 });
 }
